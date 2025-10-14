@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/animation.dart' show Curves;
 import 'package:flutter/material.dart' show EdgeInsets;
 import 'package:flame/sprite.dart' show SpriteSheet;
 import 'package:flame/effects.dart';
@@ -14,31 +13,29 @@ import '../quiz/quiz_models.dart';
 import '../main.dart' show MyGame;
 import '../ui/health.dart';
 import 'enemy_wander.dart' show EnemyType;
-import 'package:flame/sprite.dart' show SpriteSheet;
-import 'package:flame/effects.dart';
 
-const _kHeroIdlePng = 'characters/maincharacter/Idle.png';
+const _kHeroIdlePng   = 'characters/maincharacter/Idle.png';
 const _kHeroAttackPng = 'characters/maincharacter/Attack.png';
-const _kHeroDeadPng = 'characters/maincharacter/Dead.png';
+const _kHeroDeadPng   = 'characters/maincharacter/Dead.png';
 
 // frame size
-final Vector2 _kIdleFrameSize = Vector2(64, 64);
+final Vector2 _kIdleFrameSize   = Vector2(64, 64);
 final Vector2 _kAttackFrameSize = Vector2(96, 80);
-final Vector2 _kDeadFrameSize = Vector2(80, 64);
+final Vector2 _kDeadFrameSize   = Vector2(80, 64);
 
 // số frame
-const int _kIdleFrames = 3;
+const int _kIdleFrames   = 3;
 const int _kAttackFrames = 8;
-const int _kDeadFrames = 8;
+const int _kDeadFrames   = 8;
 
-const double _kIdleStep = 0.18;
+const double _kIdleStep   = 0.18;
 const double _kAttackStep = 0.07;
-const double _kDeadStep = 0.08;
+const double _kDeadStep   = 0.08;
 
 const int _kPostAnswerDelayMs = 800;
 
 class BattleResult {
-  final String outcome;
+  final String outcome; 
   final int xpGained;
 
   BattleResult(this.outcome, {this.xpGained = 0});
@@ -119,14 +116,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
   // thưởng XP theo quai
   int _xpRewardFor(EnemyType t) {
     switch (t) {
-      case EnemyType.normal:
-        return 8;
-      case EnemyType.strong:
-        return 16;
-      case EnemyType.miniboss:
-        return 35;
-      case EnemyType.boss:
-        return 80;
+      case EnemyType.normal:   return 8;
+      case EnemyType.strong:   return 16;
+      case EnemyType.miniboss: return 35;
+      case EnemyType.boss:     return 80;
     }
   }
 
@@ -168,9 +161,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     cam.viewfinder.zoom = 2.0;
     await add(cam);
 
-    final bgSprite = await Sprite.load(
-      'battlebackground/battle_background.png',
-    );
+    final bgSprite = await Sprite.load('battlebackground/battle_background.png');
     final logicalBg = Vector2(320, 180);
     final screenSize = game.size;
     final scale = min(screenSize.x / logicalBg.x, screenSize.y / logicalBg.y);
@@ -191,18 +182,17 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     );
     await cam.viewport.add(hud);
 
-    heroHealth =
-        Health(
-            maxHearts: 5,
-            currentHearts: 5,
-            fullHeartAsset: 'hp/heart.png',
-            emptyHeartAsset: 'hp/empty_heart.png',
-            heartSize: 32,
-            spacing: 6,
-            margin: const EdgeInsets.only(left: 8, top: 4),
-          )
-          ..anchor = Anchor.topLeft
-          ..position = Vector2(8, 4);
+    heroHealth = Health(
+      maxHearts: 5,
+      currentHearts: 5,
+      fullHeartAsset: 'hp/heart.png',
+      emptyHeartAsset: 'hp/empty_heart.png',
+      heartSize: 32,
+      spacing: 6,
+      margin: const EdgeInsets.only(left: 8, top: 4),
+    )
+      ..anchor = Anchor.topLeft
+      ..position = Vector2(8, 4);
     await hud.add(heroHealth);
 
     // Enemy health
@@ -245,16 +235,13 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     final Vector2 actorSize = actorBaseSize * battleScale;
     final heroDisplaySize = actorSize;
 
-    final ui.Image idleImg = await game.images.load(_kHeroIdlePng);
+    final ui.Image idleImg   = await game.images.load(_kHeroIdlePng);
     final ui.Image attackImg = await game.images.load(_kHeroAttackPng);
-    final ui.Image deadImg = await game.images.load(_kHeroDeadPng);
+    final ui.Image deadImg   = await game.images.load(_kHeroDeadPng);
 
-    final idleSheet = SpriteSheet(image: idleImg, srcSize: _kIdleFrameSize);
-    final attackSheet = SpriteSheet(
-      image: attackImg,
-      srcSize: _kAttackFrameSize,
-    );
-    final deadSheet = SpriteSheet(image: deadImg, srcSize: _kDeadFrameSize);
+    final idleSheet   = SpriteSheet(image: idleImg,   srcSize: _kIdleFrameSize);
+    final attackSheet = SpriteSheet(image: attackImg, srcSize: _kAttackFrameSize);
+    final deadSheet   = SpriteSheet(image: deadImg,   srcSize: _kDeadFrameSize);
 
     _idleAnim = idleSheet.createAnimation(
       row: 0,
@@ -313,76 +300,71 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await _nextTurn(attackSheet, deadSheet);
   }
 
-  Future<void> _nextTurn(SpriteSheet attackSheet, SpriteSheet deadSheet) async {
-    if (_takingTurn) return;
-    _takingTurn = true;
+ Future<void> _nextTurn(SpriteSheet attackSheet, SpriteSheet deadSheet) async {
+  if (_takingTurn) return;
+  _takingTurn = true;
 
-    if (_pool.isEmpty) {
-      onEnd(BattleResult.win());
-      return;
-    }
-
-    final q = _pool.removeAt(0);
-
-    _panel?.removeFromParent();
-    _answering = false;
-
-    _panel = QuizPanel(
-      question: q,
-      onAnswer: (isCorrect) async {
-        if (_answering) return;
-        _answering = true;
-
-        if (isCorrect) {
-          await _playHeroAttackOnce(attackSheet);
-          enemyHealth.damage(1);
-          await _hitFx(enemy.position);
-
-          await Future.delayed(
-            const Duration(milliseconds: _kPostAnswerDelayMs),
-          );
-
-          _panel?.removeFromParent();
-          _panel = null;
-
-          if (enemyHealth.isDead) {
-            final xp = _xpRewardFor(enemyType);
-            onEnd(BattleResult.win(xp: xp));
-            return;
-          }
-
-          _takingTurn = false;
-          await _nextTurn(attackSheet, deadSheet);
-        } else {
-          heroHealth.damage(1);
-          await _hitFx(heroRoot.position);
-
-          if (heroHealth.isDead) {
-            await _playHeroDeadOnce(deadSheet);
-            await Future.delayed(
-              const Duration(milliseconds: _kPostAnswerDelayMs),
-            );
-            _panel?.removeFromParent();
-            _panel = null;
-            onEnd(BattleResult.lose());
-            return;
-          }
-
-          await Future.delayed(
-            const Duration(milliseconds: _kPostAnswerDelayMs),
-          );
-
-          _panel?.removeFromParent();
-          _panel = null;
-
-          _takingTurn = false;
-          await _nextTurn(attackSheet, deadSheet);
-        }
-      },
-    );
-
-    await hud.add(_panel!);
+  if (_pool.isEmpty) {
+    onEnd(BattleResult.win());
+    return;
   }
+
+  final q = _pool.removeAt(0);
+
+  _panel?.removeFromParent();
+  _answering = false;
+
+  _panel = QuizPanel(
+    question: q,
+    onAnswer: (isCorrect) async {
+      if (_answering) return;
+      _answering = true;
+
+      if (isCorrect) {
+        await _playHeroAttackOnce(attackSheet);
+        enemyHealth.damage(1);
+        await _hitFx(enemy.position);
+
+        await Future.delayed(const Duration(milliseconds: _kPostAnswerDelayMs));
+
+        _panel?.removeFromParent();
+        _panel = null;
+
+        if (enemyHealth.isDead) {
+          final xp = _xpRewardFor(enemyType);
+          onEnd(BattleResult.win(xp: xp));
+          return;
+        }
+
+        _takingTurn = false;
+        await _nextTurn(attackSheet, deadSheet);
+      } else {
+        heroHealth.damage(1);
+        await _hitFx(heroRoot.position);
+
+        if (heroHealth.isDead) {
+          await _playHeroDeadOnce(deadSheet);
+          await Future.delayed(const Duration(milliseconds: _kPostAnswerDelayMs));
+          _panel?.removeFromParent();
+          _panel = null;
+          onEnd(BattleResult.lose());
+          return;
+        }
+
+        await Future.delayed(const Duration(milliseconds: _kPostAnswerDelayMs));
+
+        _panel?.removeFromParent();
+        _panel = null;
+
+        _takingTurn = false;
+        await _nextTurn(attackSheet, deadSheet);
+      }
+    },
+  );
+
+  await hud.add(_panel!);
+}
+
 
   // animation helper
   Future<void> _playHeroAttackOnce(SpriteSheet sheet) async {
@@ -489,11 +471,11 @@ class _ShadowOval extends PositionComponent {
     required Vector2 position,
     this.z = 0,
   }) : super(
-         position: position,
-         size: Vector2(width, height),
-         anchor: Anchor.center,
-         priority: z,
-       );
+          position: position,
+          size: Vector2(width, height),
+          anchor: Anchor.center,
+          priority: z,
+        );
 
   @override
   void render(ui.Canvas canvas) {
