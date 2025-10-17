@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/painting.dart';

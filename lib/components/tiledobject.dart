@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart' as ft;
-import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 
 class TiledObjectLoader {

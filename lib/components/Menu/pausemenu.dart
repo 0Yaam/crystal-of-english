@@ -52,7 +52,7 @@ class NavPauseMenu extends StatelessWidget {
               game.overlays.add('PauseButton'); // hiện lại nút pause
               game.overlays.remove('PauseMenu'); // tắt menu
             },
-            child: Container(
+            child: SizedBox(
               height: btnSize,
               child: Image.asset("assets/menu/pauseMenu/HomeBtn.png"),
             ),
@@ -68,7 +68,7 @@ class NavPauseMenu extends StatelessWidget {
               game.overlays.add('PauseButton'); // hiện lại nút pause
               game.overlays.remove('PauseMenu'); // tắt menu
             },
-            child: Container(
+            child: SizedBox(
               height: btnSize,
               child: Image.asset("assets/menu/pauseMenu/ResetBtn.png"),
             ),
@@ -84,7 +84,7 @@ class NavPauseMenu extends StatelessWidget {
               game.overlays.add('PauseButton'); // hiện lại nút pause
               game.overlays.remove('PauseMenu'); // tắt menu
             },
-            child: Container(
+            child: SizedBox(
               height: btnSize,
               child: Image.asset("assets/menu/pauseMenu/ResumeBtn.png"),
             ),

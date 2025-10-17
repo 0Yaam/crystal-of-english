@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import '../main.dart' show MyGame;
 
 enum EnemyType { normal, strong, miniboss, boss }

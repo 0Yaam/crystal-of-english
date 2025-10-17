@@ -129,6 +129,7 @@ class MyGame extends FlameGame
   bool _inBattle = false;
   Vector2? _savedJoystickPos;
 
+  @override
   late World world;
   late Health heartsHud;
   late ExperienceBar expHud;
@@ -269,6 +270,33 @@ class MyGame extends FlameGame
       final loader = TiledObjectLoader(map, world);
       await loader.loadLayer("house");
 
+      final wisemanNPC = Npc(
+        position: Vector2(52, 90),
+        manager: dialogManager,
+        interactLines: const ['Winter is comming!', 'Dont go to the north.'],
+        interactOrderMode: InteractOrderMode.alwaysFromStart,
+        interactPrompt: 'You cant fight with that body, train with me!',
+        interactChoices: [
+          DialogueChoice(
+            'Start Card Training',
+            onSelected: () {
+              
+            },
+          ),
+          DialogueChoice('Not Right Now', onSelected: dialogManager.close),
+        ],
+        idleLines: const ['You know nothing, Jon Snow', 'Why Would A Girl See Blood And Collapse?'],
+        enableIdleChatter: true,
+        spriteAsset: 'chihiro.png',
+        srcPosition: Vector2(0, 0),
+        srcSize: Vector2(64, 64),
+        size: Vector2(40, 40),
+        avatarAsset: 'assets/images/Eleonore_avatar.png',
+        avatarDisplaySize: const Size(162, 162),
+        interactRadius: 28,
+        zPriority: 20,);
+      await world.add(wisemanNPC);
+
       final npc1 = Npc(
         position: Vector2(660, 112),
         manager: dialogManager,
@@ -354,6 +382,9 @@ class MyGame extends FlameGame
         interactRadius: 28,
         zPriority: 20,);
       await world.add(shopNpc);
+
+
+
       await world.add(
         EnemyWander(
           patrolRect: ui.Rect.fromLTWH(700, 500, 160, 120),

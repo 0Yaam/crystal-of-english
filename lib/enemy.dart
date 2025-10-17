@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 
 import 'components/enemy_wander.dart' show EnemyType;
 import 'main.dart' show MyGame;

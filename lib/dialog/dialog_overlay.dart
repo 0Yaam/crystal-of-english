@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' show Rect;
 import 'dialog_manager.dart';
 import '../ui/sprite_slice.dart';
 

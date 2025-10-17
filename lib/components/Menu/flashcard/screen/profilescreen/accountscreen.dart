@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mygame/components/Menu/Theme/color.dart';
-import 'package:mygame/components/Menu/flashcard/business/Flashcard.dart';
 import 'package:mygame/components/Menu/flashcard/screen/decklist/deckwelcome.dart';
-import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
   const Account({super.key});

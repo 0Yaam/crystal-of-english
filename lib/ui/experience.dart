@@ -6,7 +6,9 @@ import 'package:flutter/material.dart' show EdgeInsets;
 typedef LevelUpCallback = void Function(int newLevel);
 
 class ExperienceBar extends PositionComponent {
+  @override
   final double width;
+  @override
   final double height;
   final EdgeInsets margin;
   final LevelUpCallback? onLevelUp;

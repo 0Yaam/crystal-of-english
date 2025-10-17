@@ -21,7 +21,7 @@ class PauseButton extends StatelessWidget {
           game.overlays.add('PauseMenu'); // show menu pause
           game.overlays.remove('PauseButton'); // ẩn nút khi menu hiện
         },
-        child: Container(
+        child: SizedBox(
           height: 45,
           child: Image.asset("assets/menu/pauseMenu/pauseBtn.png")),
       ),

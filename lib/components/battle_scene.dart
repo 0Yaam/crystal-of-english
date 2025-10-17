@@ -307,7 +307,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     };
 
     // Helper to create animation from a single-row sprite sheet png
-    SpriteAnimation _createAnimFromSheet(ui.Image img, Vector2 frameSize,
+    SpriteAnimation createAnimFromSheet(ui.Image img, Vector2 frameSize,
         double step, int frames,
         {bool loop = true}) {
       final sheet = SpriteSheet(image: img, srcSize: frameSize);
@@ -330,10 +330,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
       final Vector2 eDeathFrame = Vector2(eDeath.height.toDouble(), eDeath.height.toDouble());
 
       // Create animations
-      _enemyIdleAnim = _createAnimFromSheet(eIdle, eIdleFrame, _kIdleStep, (eIdle.width / eIdleFrame.x).floor());
-      _enemyAttackAnim = _createAnimFromSheet(eAttack, eAttackFrame, _kAttackStep, (eAttack.width / eAttackFrame.x).floor(), loop: false);
-      _enemyHurtAnim = _createAnimFromSheet(eHurt, eHurtFrame, _kHurtStep, (eHurt.width / eHurtFrame.x).floor(), loop: false);
-      _enemyDeathAnim = _createAnimFromSheet(eDeath, eDeathFrame, _kDeadStep, (eDeath.width / eDeathFrame.x).floor(), loop: false);
+      _enemyIdleAnim = createAnimFromSheet(eIdle, eIdleFrame, _kIdleStep, (eIdle.width / eIdleFrame.x).floor());
+      _enemyAttackAnim = createAnimFromSheet(eAttack, eAttackFrame, _kAttackStep, (eAttack.width / eAttackFrame.x).floor(), loop: false);
+      _enemyHurtAnim = createAnimFromSheet(eHurt, eHurtFrame, _kHurtStep, (eHurt.width / eHurtFrame.x).floor(), loop: false);
+      _enemyDeathAnim = createAnimFromSheet(eDeath, eDeathFrame, _kDeadStep, (eDeath.width / eDeathFrame.x).floor(), loop: false);
 
       enemyAnim = SpriteAnimationComponent(
         animation: _enemyIdleAnim,

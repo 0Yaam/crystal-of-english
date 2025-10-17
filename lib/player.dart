@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame/input.dart';
 import 'main.dart';
 import 'components/collisionmap.dart';
 
