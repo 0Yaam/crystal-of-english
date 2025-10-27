@@ -99,7 +99,6 @@ flutter:
     - assets/images/characters/enemy/at_battle/vampire/
     - assets/images/characters/enemy/at_battle/plant/
     - assets/images/characters/
-    - assets/images/items/
     - assets/menu/
     - assets/menu/pauseMenu/
     - assets/
@@ -116,6 +115,7 @@ flutter:
     - assets/anki-deck/
     - assets/images/shop/gold.png
     - assets/level-titan/
+    - assets/images/items/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

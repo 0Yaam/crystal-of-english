@@ -4,11 +4,13 @@ import '../state/inventory.dart';
 class InventoryPanel extends StatelessWidget {
   final VoidCallback onClose;
   final int columns;
+  final void Function(GameItem item)? onUseItem;
 
   const InventoryPanel({
     super.key,
     required this.onClose,
     this.columns = 5,
+    this.onUseItem,
   });
 
   @override
@@ -65,7 +67,7 @@ class InventoryPanel extends StatelessWidget {
                       itemCount: totalSlots,
                       itemBuilder: (context, index) {
                         final item = index < items.length ? items[index] : null;
-                        return Container(
+                        final tileContent = Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
@@ -94,6 +96,33 @@ class InventoryPanel extends StatelessWidget {
                                   ],
                                 ),
                         );
+                        if (item != null && onUseItem != null) {
+                          return InkWell(
+                            onTap: () async {
+                              final ok = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text('Sử dụng ${item.name}?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(ctx, false),
+                                      child: const Text('Hủy'),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () => Navigator.pop(ctx, true),
+                                      child: const Text('Sử dụng'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (ok == true) {
+                                onUseItem!(item);
+                              }
+                            },
+                            child: tileContent,
+                          );
+                        }
+                        return tileContent;
                       },
                     );
                   },

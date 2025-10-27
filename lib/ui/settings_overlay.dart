@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../audio/audio_manager.dart';
 import 'inventory_panel.dart';
+import '../state/inventory.dart';
 
 class SettingsOverlay extends StatefulWidget {
   static const id = 'settings_overlay';
 
   final AudioManager audio;
-  const SettingsOverlay({super.key, required this.audio});
+  final void Function(GameItem item)? onUseItem;
+  const SettingsOverlay({super.key, required this.audio, this.onUseItem});
 
   @override
   State<SettingsOverlay> createState() => _SettingsOverlayState();
@@ -185,6 +187,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                   padding: const EdgeInsets.only(top: 8, right: 8),
                   child: InventoryPanel(
                     onClose: () => setState(() => invOpen = false),
+                    onUseItem: widget.onUseItem,
                   ),
                 ),
               ),

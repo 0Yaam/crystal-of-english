@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class GameItem {
   final String name;
   final String imageAssetPath;
+  final int price; // gold price for shop
 
-  const GameItem(this.name, this.imageAssetPath);
+  const GameItem(this.name, this.imageAssetPath, {this.price = 0});
 }
 
 class Inventory extends ChangeNotifier {

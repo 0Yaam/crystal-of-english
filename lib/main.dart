@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+﻿import 'dart:ui' as ui;
 
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
@@ -104,11 +104,11 @@ void main() async {
                 ),
               );
             },
-            'CardLevelScreen': (context, game) {
+                        'CardLevelScreen': (context, game) {
               return Cardlevelscreen(game: game as MyGame);
             },
             SettingsOverlay.id: (context, game) {
-              return SettingsOverlay(audio: AudioManager.instance);
+              return SettingsOverlay(audio: AudioManager.instance, onUseItem: (item) { final g = game as MyGame; if (item.name.toLowerCase() == 'image1') { g.heartsHud.heal(1); Inventory.instance.remove(item); } });
             },
             ShopOverlay.id: (context, game) {
               final g = game as MyGame;
@@ -116,6 +116,14 @@ void main() async {
                 onClose: () async {
                   g.overlays.remove(ShopOverlay.id);
                   await g.showAreaTitle('Cảm ơn bạn đã mua hàng');
+                },
+                getGold: () => g.goldHud.gold,
+                spendGold: (amount) {
+                  if (g.goldHud.gold >= amount) {
+                    g.goldHud.addGold(-amount);
+                    return true;
+                  }
+                  return false;
                 },
               );
             },
@@ -309,20 +317,20 @@ class MyGame extends FlameGame
       final npc1 = Npc(
         position: Vector2(660, 112),
         manager: dialogManager,
-        interactLines: ['Xin chào!', 'Bạn cần gì?'],
+        interactLines: ['Xin chÃ o!', 'Báº¡n cáº§n gÃ¬?'],
         interactOrderMode: InteractOrderMode.alwaysFromStart,
-        interactPrompt: 'Bạn muốn làm gì?',
+        interactPrompt: 'Báº¡n muá»‘n lÃ m gÃ¬?',
         interactChoices: [
           DialogueChoice(
-            'Vào thư viện',
+            'VÃ o thÆ° viá»‡n',
             onSelected: () async {
               dialogManager.close();
               await loadMap('houseinterior.tmx', spawn: Vector2(182, 172));
             },
           ),
-          DialogueChoice('Tạm biệt', onSelected: dialogManager.close),
+          DialogueChoice('Táº¡m biá»‡t', onSelected: dialogManager.close),
         ],
-        idleLines: ['Hmm...', 'Nghe nói phía bắc có kho báu.'],
+        idleLines: ['Hmm...', 'Nghe nÃ³i phÃ­a báº¯c cÃ³ kho bÃ¡u.'],
         enableIdleChatter: true,
         spriteAsset: 'Eleonore.png',
         srcPosition: Vector2(0, 0),
@@ -338,20 +346,20 @@ class MyGame extends FlameGame
       final npc2 = Npc(
         position: Vector2(876, 560),
         manager: dialogManager,
-        interactLines: ['Xin chào!', 'Bạn cần gì?'],
+        interactLines: ['Xin chÃ o!', 'Báº¡n cáº§n gÃ¬?'],
         interactOrderMode: InteractOrderMode.alwaysFromStart,
-        interactPrompt: 'Xin chào!, Bạn cần gì?',
+        interactPrompt: 'Xin chÃ o!, Báº¡n cáº§n gÃ¬?',
         interactChoices: [
           DialogueChoice(
-            'Vào đảo undead',
+            'VÃ o Ä‘áº£o undead',
             onSelected: () async {
               dialogManager.close();
               await loadMap('dungeon.tmx', spawn: Vector2(2100, 1095));
             },
           ),
-          DialogueChoice('Tạm biệt', onSelected: dialogManager.close),
+          DialogueChoice('Táº¡m biá»‡t', onSelected: dialogManager.close),
         ],
-        idleLines: ['Hmm...', 'Nghe nói phía bắc có kho báu.'],
+        idleLines: ['Hmm...', 'Nghe nÃ³i phÃ­a báº¯c cÃ³ kho bÃ¡u.'],
         enableIdleChatter: true,
         spriteAsset: 'Joanna.png',
         srcPosition: Vector2(0, 0),
@@ -367,20 +375,20 @@ class MyGame extends FlameGame
       final shopNpc = Npc(
         position: Vector2(312, 342),
         manager: dialogManager,
-        interactLines: const ['Xin chào!', 'Bạn muốn mua gì không?'],
+        interactLines: const ['Xin chÃ o!', 'Báº¡n muá»‘n mua gÃ¬ khÃ´ng?'],
         interactOrderMode: InteractOrderMode.alwaysFromStart,
-        interactPrompt: 'Chọn hành động:',
+        interactPrompt: 'Chá»n hÃ nh Ä‘á»™ng:',
         interactChoices: [
           DialogueChoice(
-            'Mua vật phẩm',
+            'Mua váº­t pháº©m',
             onSelected: () async {
               dialogManager.close();
               overlays.add(ShopOverlay.id);
             },
           ),
-          DialogueChoice('Tạm biệt', onSelected: dialogManager.close),
+          DialogueChoice('Táº¡m biá»‡t', onSelected: dialogManager.close),
         ],
-        idleLines: const ['Giá rẻ như bèo!', 'Đồ mới về đây!'],
+        idleLines: const ['GiÃ¡ ráº» nhÆ° bÃ¨o!', 'Äá»“ má»›i vá» Ä‘Ã¢y!'],
         enableIdleChatter: true,
         spriteAsset: 'Eleonore.png',
         srcPosition: Vector2(0, 0),
@@ -520,7 +528,7 @@ class MyGame extends FlameGame
 
     heartsHud.removeFromParent();
 
-    // pause nhạc nền khi vào battle
+    // pause nháº¡c ná»n khi vÃ o battle
     await AudioManager.instance.pauseBgm();
 
     _battleScene = BattleScene(
@@ -566,7 +574,7 @@ class MyGame extends FlameGame
       player.position = Vector2(2100, 1095);
     }
 
-    // continue nhạc nền khi thoát battle
+    // continue nháº¡c ná»n khi thoÃ¡t battle
     AudioManager.instance.resumeBgm();
 
     // Restore settings overlay after battle
@@ -697,6 +705,11 @@ class MyGame extends FlameGame
     }
   }
 }
+
+
+
+
+
 
 
 
