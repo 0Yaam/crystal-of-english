@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class GameItem {
   final String name;
-  final IconData icon;
-  const GameItem(this.name, this.icon);
+  final String imageAssetPath;
+
+  const GameItem(this.name, this.imageAssetPath);
 }
 
 class Inventory extends ChangeNotifier {

@@ -99,6 +99,7 @@ flutter:
     - assets/images/characters/enemy/at_battle/vampire/
     - assets/images/characters/enemy/at_battle/plant/
     - assets/images/characters/
+    - assets/images/items/
     - assets/menu/
     - assets/menu/pauseMenu/
     - assets/

@@ -3,13 +3,11 @@ import '../state/inventory.dart';
 
 class InventoryPanel extends StatelessWidget {
   final VoidCallback onClose;
-  final int totalSlots;
   final int columns;
 
   const InventoryPanel({
     super.key,
     required this.onClose,
-    this.totalSlots = 20,
     this.columns = 5,
   });
 
@@ -19,16 +17,8 @@ class InventoryPanel extends StatelessWidget {
     final spacing = 8.0;
     final gridPadding = 12.0;
     final panelWidth = size.width * 0.4;
-    final gridWidth = panelWidth - gridPadding * 2;
-    final cellSize = ((gridWidth - (columns - 1) * spacing) / columns)
-        .floorToDouble();
-    final rows = (totalSlots + columns - 1) ~/ columns; // expect 4
-    final gridHeight = (rows * cellSize + (rows - 1) * spacing)
-        .floorToDouble();
-    final headerApprox = 48.0 + 12.0 + 1.0; 
-    final panelHeight = (gridHeight + gridPadding * 2 + headerApprox)
-        .floorToDouble()
-        .clamp(0.0, (size.height * 0.9).floorToDouble());
+    // Cap panel height to 90% of screen to avoid overflow. Grid inside will scroll if needed.
+    final panelHeight = (size.height * 0.9).floorToDouble();
 
     return Material(
       color: Colors.white.withOpacity(0.98),
@@ -55,17 +45,17 @@ class InventoryPanel extends StatelessWidget {
               ),
             ),
             const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SizedBox(
-                height: gridHeight,
+            // Grid area takes remaining space and scrolls if overflowing
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
                 child: AnimatedBuilder(
                   animation: Inventory.instance,
                   builder: (context, _) {
                     final items = Inventory.instance.items;
+                    final totalSlots = Inventory.instance.capacity;
                     return GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: columns,
                         crossAxisSpacing: spacing,
@@ -86,7 +76,15 @@ class InventoryPanel extends StatelessWidget {
                               : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(item.icon, size: 22, color: Colors.black87),
+                                    Flexible(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4),
+                                        child: Image.asset(
+                                          item.imageAssetPath,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
                                     const SizedBox(height: 4),
                                     Text(
                                       item.name,
