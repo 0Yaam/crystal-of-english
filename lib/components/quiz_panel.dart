@@ -385,7 +385,7 @@ class QuizPanel extends PositionComponent
     }
 
     // RIGHT column
-    final double gap = 15.0;
+    final double gap = 8.0;
     final count = min(
       question.options.length,
       4,
