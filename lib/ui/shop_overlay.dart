@@ -36,7 +36,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
 
   Future<void> _loadItemsFromAssets() async {
     try {
-      // Read the Flutter asset manifest to discover all assets under items folder
+      // Đọc manifest để lấy danh sách ảnh trong thư mục assets/images/items
       final manifestJson = await rootBundle.loadString('AssetManifest.json');
       final Map<String, dynamic> manifest = json.decode(manifestJson) as Map<String, dynamic>;
       const prefix = 'assets/images/items/';
@@ -47,23 +47,22 @@ class _ShopOverlayState extends State<ShopOverlay> {
         ..sort();
 
       final items = assetPaths.map((path) {
-        // Derive a simple name from filename without extension
+        // Lấy tên từ filename (không phần mở rộng)
         final filename = path.split('/').last;
         final dot = filename.lastIndexOf('.');
         final base = dot >= 0 ? filename.substring(0, dot) : filename;
-        // Temporary pricing: image1 costs 5 gold
+        // Giá tạm thời: image1 = 5 vàng, còn lại = 0
         final price = base.toLowerCase() == 'image1' ? 5 : 0;
         return GameItem(base, path, price: price);
       }).toList(growable: false);
 
       setState(() {
         npcItems = items;
-        // Expand player inventory capacity to match number of items
+        // Mở rộng sức chứa hành trang cho đủ số item (tùy yêu cầu gameplay)
         Inventory.instance.capacity = npcItems.length;
         _loading = false;
       });
     } catch (e) {
-      // If something goes wrong, keep list empty but don't crash
       debugPrint('Failed to load item assets: $e');
       setState(() {
         _loading = false;
@@ -71,7 +70,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
     }
   }
 
-      Future<void> _buy(GameItem item) async {
+  Future<void> _buy(GameItem item) async {
     if (Inventory.instance.items.length >= Inventory.instance.capacity) {
       await showDialog<void>(
         context: context,
@@ -141,31 +140,33 @@ class _ShopOverlayState extends State<ShopOverlay> {
       builder: (ctx) {
         return AlertDialog(
           title: Text(name),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 220,
-                height: 160,
-                child: Center(
-                  child: Image.asset(
-                    item.imageAssetPath,
-                    fit: BoxFit.contain,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 220,
+                  height: 160,
+                  child: Center(
+                    child: Image.asset(
+                      item.imageAssetPath,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'MÃ´ táº£: ${name.isNotEmpty ? name : 'KhÃ´ng cÃ³ mÃ´ táº£'}',
-                style: const TextStyle(fontSize: 13),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  'Mô tả: ${name.isNotEmpty ? name : 'Không có mô tả'}',
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('ÄÃ³ng'),
+              child: const Text('Đóng'),
             ),
             FilledButton(
               onPressed: () {
@@ -264,7 +265,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
                         children: [
                           const Icon(Icons.storefront, size: 18),
                           const SizedBox(width: 6),
-                          const Text('Gian hÃ ng'),
+                          const Text('Gian hàng'),
                           const Spacer(),
                           IconButton(onPressed: widget.onClose, icon: const Icon(Icons.close)),
                         ],
@@ -283,7 +284,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
                                 children: [
                                   const Padding(
                                     padding: EdgeInsets.only(left: 4.0, bottom: 6),
-                                    child: Text('HÃ ng cá»§a NPC'),
+                                    child: Text('Hàng của NPC'),
                                   ),
                                   LayoutBuilder(
                                     builder: (context, c) {
@@ -306,7 +307,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
                                         return SizedBox(
                                           height: cellSize + gridSpacing,
                                           child: const Center(
-                                            child: Text('KhÃ´ng tÃ¬m tháº¥y item trong assets/images/items'),
+                                            child: Text('Không tìm thấy item trong assets/images/items'),
                                           ),
                                         );
                                       }
@@ -321,41 +322,41 @@ class _ShopOverlayState extends State<ShopOverlay> {
                               ),
                             ),
                             const SizedBox(width: spacing),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 4.0, bottom: 6),
-                                  child: Text('HÃ nh trang cá»§a báº¡n'),
-                                ),
-                                AnimatedBuilder(
-                                  animation: Inventory.instance,
-                                  builder: (context, _) {
-                                    return LayoutBuilder(
-                                      builder: (context, c) {
-                                        final gridWidth = c.maxWidth;
-                                        final cellSize = ((gridWidth - (gridCols - 1) * gridSpacing) / gridCols)
-                                            .floorToDouble();
-                                        final total = Inventory.instance.capacity;
-                                        final rows = total == 0 ? 1 : ((total + gridCols - 1) ~/ gridCols);
-                                        final gridHeight = (rows * cellSize + (rows - 1) * gridSpacing)
-                                            .floorToDouble();
-                                        return SizedBox(
-                                          height: gridHeight,
-                                          child: _grid(
-                                            Inventory.instance.items,
-                                            columns: gridCols,
-                                            totalSlotsOverride: Inventory.instance.capacity,
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 4.0, bottom: 6),
+                                    child: Text('Hành trang của bạn'),
+                                  ),
+                                  AnimatedBuilder(
+                                    animation: Inventory.instance,
+                                    builder: (context, _) {
+                                      return LayoutBuilder(
+                                        builder: (context, c) {
+                                          final gridWidth = c.maxWidth;
+                                          final cellSize = ((gridWidth - (gridCols - 1) * gridSpacing) / gridCols)
+                                              .floorToDouble();
+                                          final total = Inventory.instance.capacity;
+                                          final rows = total == 0 ? 1 : ((total + gridCols - 1) ~/ gridCols);
+                                          final gridHeight = (rows * cellSize + (rows - 1) * gridSpacing)
+                                              .floorToDouble();
+                                          return SizedBox(
+                                            height: gridHeight,
+                                            child: _grid(
+                                              Inventory.instance.items,
+                                              columns: gridCols,
+                                              totalSlotsOverride: Inventory.instance.capacity,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                           ],
                         ),
                       ),
@@ -370,7 +371,3 @@ class _ShopOverlayState extends State<ShopOverlay> {
     );
   }
 }
-
-
-
-
