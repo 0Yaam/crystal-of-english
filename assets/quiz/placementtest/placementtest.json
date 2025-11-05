@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "question": "She _____ to the gym every Monday and Thursday.",
+    "choices": ["go", "goes", "going"],
+    "correctIndex": 1
+  },
+  {
+    "id": 2,
+    "question": "If I had more time, I _____ Spanish.",
+    "choices": ["learn", "would learn", "am learning"],
+    "correctIndex": 1
+  },
+  {
+    "id": 3,
+    "question": "They have lived here _____ 2010.",
+    "choices": ["since", "for", "ago"],
+    "correctIndex": 0
+  },
+  {
+    "id": 4,
+    "question": "By the time she arrived, we _____ dinner.",
+    "choices": ["had finished", "have finished", "finished"],
+    "correctIndex": 0
+  },
+  {
+    "id": 5,
+    "question": "He requested _____ his luggage at the front desk.",
+    "choices": ["to collect", "collecting", "collect"],
+    "correctIndex": 0
+  },
+  {
+    "id": 6,
+    "question": "I’d rather you _____ the truth.",
+    "choices": ["told", "tell", "have told"],
+    "correctIndex": 0
+  },
+  {
+    "id": 7,
+    "question": "Rarely _____ she seen such a beautiful view.",
+    "choices": ["has", "have", "had"],
+    "correctIndex": 0
+  },
+  {
+    "id": 8,
+    "question": "The report needs _____ by Friday.",
+    "choices": ["to complete", "completing", "be completed"],
+    "correctIndex": 2
+  },
+  {
+    "id": 9,
+    "question": "Scarcely _____ the meeting finished when the alarm rang.",
+    "choices": ["had", "has", "did"],
+    "correctIndex": 0
+  },
+  {
+    "id": 10,
+    "question": "She’s looking forward _____ her new job.",
+    "choices": ["to start", "starting", "for starting"],
+    "correctIndex": 1
+  },
+  {
+    "id": 11,
+    "question": "If you should need assistance, please _____ us.",
+    "choices": ["contact", "to contact", "contacting"],
+    "correctIndex": 0
+  },
+  {
+    "id": 12,
+    "question": "Had I known about the traffic, I _____ earlier.",
+    "choices": ["would leave", "would have left", "left"],
+    "correctIndex": 1
+  },
+  {
+    "id": 13,
+    "question": "No sooner _____ the train left than the rain started.",
+    "choices": ["had", "has", "did"],
+    "correctIndex": 0
+  },
+  {
+    "id": 14,
+    "question": "She insisted _____ him to apologise.",
+    "choices": ["on asking", "asking", "to ask"],
+    "correctIndex": 2
+  },
+  {
+    "id": 15,
+    "question": "Only after the show _____ we realised how good it had been.",
+    "choices": ["did", "had", "have"],
+    "correctIndex": 1
+  }
+]

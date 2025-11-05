@@ -116,6 +116,7 @@ flutter:
     - assets/images/shop/gold.png
     - assets/level-titan/
     - assets/images/items/
+    - assets/quiz/placementtest/placementtest.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -134,6 +134,7 @@ class DatabaseHelper {
     });
   }
 
+  
   Future<void> deleteDeck(int id) async {
     final db = await database;
     await db.delete('decks', where: 'id=?', whereArgs: [id]);
@@ -146,6 +147,18 @@ class DatabaseHelper {
       'cards',
       where: 'deck_id=?',
       whereArgs: [deckId],
+    );
+    return List.generate(maps.length, (i) {
+      return Flashcard.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<Flashcard>> getCardByLevel(int level) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'cards',
+      where: 'level=?',
+      whereArgs: [level],
     );
     return List.generate(maps.length, (i) {
       return Flashcard.fromMap(maps[i]);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mygame/components/Menu/setting.dart';
+import 'package:flutter/services.dart';
+import 'package:mygame/components/Menu/usersetting/setting.dart';
 import 'package:mygame/main.dart';
 import 'package:provider/provider.dart';
 import 'package:mygame/components/Menu/flashcard/business/Deck.dart';
@@ -8,11 +9,16 @@ import 'package:mygame/components/Menu/flashcard/screen/decklist/deckwelcome.dar
 import 'package:flutter/foundation.dart';
 import 'package:mygame/audio/audio_manager.dart';
 
-class MainMenu extends StatelessWidget {
+class MainMenu extends StatefulWidget {
   final MyGame game;
 
   const MainMenu({super.key, required this.game});
 
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,7 +30,7 @@ class MainMenu extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: MenuContent(game: game),
+        body: MenuContent(game: widget.game),
       ),
     );
   }
@@ -122,7 +128,10 @@ class MenuNav extends StatelessWidget {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
           ),
-          onPressed: () {},
+          onPressed: () {
+            game.overlays.remove('MainMenu'); // ẩn menu
+            game.resumeEngine();
+          },
           child: SizedBox(
             height: 40,
             child: Image.asset("assets/menu/Continue.png"),
@@ -138,7 +147,7 @@ class MenuNav extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Setting(game: game)),
+              MaterialPageRoute(builder: (context) => UserScreen()),
             );
           },
           child: SizedBox(
@@ -153,7 +162,7 @@ class MenuNav extends StatelessWidget {
             shadowColor: Colors.transparent,
           ),
           onPressed: () {
-            game.pauseEngine();
+            SystemNavigator.pop();
           },
           child: SizedBox(
             height: 40,

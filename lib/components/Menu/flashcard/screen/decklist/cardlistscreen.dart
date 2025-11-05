@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mygame/components/Menu/flashcard/business/Flashcard.dart';
 import 'package:mygame/components/Menu/flashcard/screen/blankfill/blankwordscreen.dart';
 import 'package:mygame/components/Menu/flashcard/screen/flashcard/newwayreview.dart';
+import 'package:mygame/main.dart';
+import 'package:mygame/vocab/screen/cardlevel/cardlevelscreen.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -11,7 +13,8 @@ final AudioPlayer audio = AudioPlayer();
 
 class CardListScreen extends StatefulWidget {
   final int? deckId;
-  const CardListScreen({super.key, required this.deckId});
+  final String? deckName;
+  const CardListScreen({super.key, required this.deckId,required this.deckName});
 
   @override
   State<CardListScreen> createState() => _CardListScreenState();
@@ -43,7 +46,8 @@ class _CardListScreenState extends State<CardListScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               NavPageBtn(label: "review", screenBuilder: ()=>Newwayreview(deckId: widget.deckId!)),
-              NavPageBtn(label: "blank word", screenBuilder: ()=>BlankWordScreen(deck_id: widget.deckId!,))
+              NavPageBtn(label: "blank word", screenBuilder: ()=>BlankWordScreen(deck_id: widget.deckId!,)),
+              
             ],
           ),
         ],

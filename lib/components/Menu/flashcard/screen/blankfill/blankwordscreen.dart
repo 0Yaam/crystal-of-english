@@ -4,7 +4,6 @@ import 'package:mygame/components/Menu/Theme/color.dart';
 import 'package:mygame/components/Menu/flashcard/business/Flashcard.dart';
 import 'package:provider/provider.dart';
 
-
 AudioPlayer audioPlayer = AudioPlayer();
 
 class BlankWordScreen extends StatefulWidget {
@@ -28,6 +27,7 @@ class _BlankWordScreenState extends State<BlankWordScreen> {
   void initState() {
     super.initState();
     futureCard = _loadDueCard();
+    print(widget.deck_id);
   }
 
   @override
@@ -126,50 +126,55 @@ class _BlankWordQuizzState extends State<BlankWordQuizz> {
   }
 
   Future<bool> checkAnswer(String letter, int index) async {
-    if (letter == wordList[curIdx]) {
-      setState(() {
-        blanks[curIdx] = wordList[curIdx];
-        visible[index] = false;
-        curIdx++;
-      });
-
-      if (curIdx <= wordList.length && curIdx == wordList.length) {
-        print("in wait list");
-        if (media != "" || card.sound != null || card.sound != '') {
-          try {
-            await audioPlayer.play(
-              DeviceFileSource(
-                "/data/user/0/com.example.mygame/app_flutter/anki/$media/${card.sound}",
-              ),
-            );
-          } catch (e) {
-            print(e);
-          }
-        }
-        print("done sound");
+    try {
+      if (letter == wordList[curIdx]) {
         setState(() {
-          finish = true;
+          blanks[curIdx] = wordList[curIdx];
+          visible[index] = false;
+          curIdx++;
         });
-        Future.delayed(Duration(milliseconds: 1000), () {
+
+        if (curIdx <= wordList.length && curIdx == wordList.length) {
+          print("in wait list");
+          if (media != "" || card.sound != null || card.sound != '') {
+            try {
+              await audioPlayer.play(
+                DeviceFileSource(
+                  "/data/user/0/com.example.mygame/app_flutter/anki/$media/${card.sound}",
+                ),
+              );
+            } catch (e) {
+              print(e);
+            }
+          }
+          print("done sound");
           setState(() {
-            finish=false;
+            finish = true;
+          });
+          Future.delayed(Duration(milliseconds: 1000), () {
+            setState(() {
+              finish = false;
+            });
+          });
+          await Future.delayed(const Duration(seconds: 1));
+          if (mounted) widget.onComplete();
+        }
+        return true;
+      } else {
+        setState(() {
+          trueList[index] = false;
+        });
+
+        Future.delayed(Duration(milliseconds: 400), () {
+          if (!mounted) return;
+          setState(() {
+            trueList[index] = true; // back to blue
           });
         });
-        await Future.delayed(const Duration(seconds: 1));
-        if (mounted) widget.onComplete();
+        return false;
       }
-      return true;
-    } else {
-      setState(() {
-        trueList[index] = false;
-      });
-
-      Future.delayed(Duration(milliseconds: 400), () {
-        if (!mounted) return;
-        setState(() {
-          trueList[index] = true; // back to blue
-        });
-      });
+    } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -207,9 +212,7 @@ class _BlankWordQuizzState extends State<BlankWordQuizz> {
               child: Container(
                 width: 800,
                 height: 200,
-                decoration: BoxDecoration(
-                  color: AppColor.blueist,
-                ),
+                decoration: BoxDecoration(color: AppColor.blueist),
                 child: Center(
                   child: SingleChildScrollView(
                     child: Column(
@@ -281,7 +284,7 @@ class _BlankWordQuizzState extends State<BlankWordQuizz> {
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
                 ),
-                color:AppColor.blueist,
+                color: AppColor.blueist,
               ),
               child: Center(
                 child: Padding(

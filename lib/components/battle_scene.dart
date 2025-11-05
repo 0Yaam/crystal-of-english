@@ -1,3 +1,4 @@
+// Modular enemy animation map for alternative system
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -19,18 +20,19 @@ const _kHeroAttackPng = 'characters/maincharacter/Attack.png';
 const _kHeroDeadPng = 'characters/maincharacter/Dead.png';
 const _kHeroHurtPng = 'characters/maincharacter/Hurt.png';
 
-// frame size
-final Vector2 _kIdleFrameSize = Vector2(64, 64);
-final Vector2 _kAttackFrameSize = Vector2(96, 80);
-final Vector2 _kDeadFrameSize = Vector2(80, 64);
-final Vector2 _kHurtFrameSize = Vector2(64, 64);
+// Hero frame sizes
+final Vector2 _kHeroIdleFrameSize = Vector2(64, 64);
+final Vector2 _kHeroAttackFrameSize = Vector2(96, 80);
+final Vector2 _kHeroDeadFrameSize = Vector2(80, 64);
+final Vector2 _kHeroHurtFrameSize = Vector2(64, 64);
 
-// số frame
+// Hero animation frame counts (based on hero sprite sheets)
 const int _kIdleFrames = 4;
 const int _kAttackFrames = 8;
 const int _kDeadFrames = 8;
 const int _kHurtFrames = 4;
 
+// Animation timing (seconds per frame)
 const double _kIdleStep = 0.18;
 const double _kAttackStep = 0.07;
 const double _kDeadStep = 0.08;
@@ -41,13 +43,12 @@ const int _kPostAnswerDelayMs = 800;
 class BattleResult {
   final String outcome;
   final int xpGained;
-  final int goldGained;
 
-  BattleResult(this.outcome, {this.xpGained = 0, this.goldGained = 0});
+  BattleResult(this.outcome, {this.xpGained = 0});
 
-  static BattleResult win({int xp = 0, int gold = 0}) => BattleResult('win', xpGained: xp, goldGained: gold);
-  static BattleResult lose() => BattleResult('lose', xpGained: 0, goldGained: 0);
-  static BattleResult escape() => BattleResult('escape', xpGained: 0, goldGained: 0);
+  static BattleResult win({int xp = 0}) => BattleResult('win', xpGained: xp);
+  static BattleResult lose() => BattleResult('lose', xpGained: 0);
+  static BattleResult escape() => BattleResult('escape', xpGained: 0);
 }
 
 typedef BattleEndCallback = void Function(BattleResult result);
@@ -132,22 +133,6 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     }
   }
 
-    final Random _rng = Random();
-
-  int _goldRewardFor(EnemyType t) {
-    // Randomized gold drop per enemy type
-    switch (t) {
-      case EnemyType.normal:
-        return 3 + _rng.nextInt(6); // 3..8
-      case EnemyType.strong:
-        return 8 + _rng.nextInt(8); // 8..15
-      case EnemyType.miniboss:
-        return 15 + _rng.nextInt(16); // 15..30
-      case EnemyType.boss:
-        return 30 + _rng.nextInt(31); // 30..60
-    }
-  }
-
   // Hero animation
   late final PositionComponent heroRoot;
   late final SpriteAnimationComponent heroAnim;
@@ -164,15 +149,12 @@ class BattleScene extends Component with HasGameReference<MyGame> {
   late Health heroHealth;
   late Health enemyHealth;
 
+  late Map<String, SpriteAnimation> _enemyAnims;
+
   late PositionComponent enemy;
-  late PositionComponent heroShadow;
-  late PositionComponent enemyShadow;
-  // enemy battle animation
+  // Enemy animation sprites and helpers
   late SpriteAnimationComponent enemyAnim;
   late SpriteAnimation _enemyIdleAnim;
-  SpriteAnimation? _enemyAttackAnim;
-  SpriteAnimation? _enemyHurtAnim;
-  SpriteAnimation? _enemyDeathAnim;
 
   late final QuizRepository _quizRepo;
   late List<QuizQuestion> _pool;
@@ -272,14 +254,14 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     final ui.Image idleImg = await game.images.load(_kHeroIdlePng);
     final ui.Image attackImg = await game.images.load(_kHeroAttackPng);
     final ui.Image deadImg = await game.images.load(_kHeroDeadPng);
-  final ui.Image hurtImg = await game.images.load(_kHeroHurtPng);
+    final ui.Image hurtImg = await game.images.load(_kHeroHurtPng);
 
-    final idleSheet = SpriteSheet(image: idleImg, srcSize: _kIdleFrameSize);
+    final idleSheet = SpriteSheet(image: idleImg, srcSize: _kHeroIdleFrameSize);
     final attackSheet = SpriteSheet(
       image: attackImg,
-      srcSize: _kAttackFrameSize,
+      srcSize: _kHeroAttackFrameSize,
     );
-    final deadSheet = SpriteSheet(image: deadImg, srcSize: _kDeadFrameSize);
+    final deadSheet = SpriteSheet(image: deadImg, srcSize: _kHeroDeadFrameSize);
 
     _idleAnim = idleSheet.createAnimation(
       row: 0,
@@ -292,7 +274,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     heroRoot = PositionComponent(
       size: heroDisplaySize,
       anchor: Anchor.bottomCenter,
-      position: Vector2(centerX - 70 * battleScale, baselineY + 77),
+      position: Vector2(
+        centerX - 70 * battleScale,
+        baselineY + 50,
+      ), // Move hero higher by 2px
       priority: 10,
     );
 
@@ -307,14 +292,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await heroRoot.add(heroAnim);
     await hud.add(heroRoot);
 
-    heroShadow = _shadowAt(
-      heroRoot.position,
-      z: 9,
-      width: 36 * battleScale,
-      height: 10 * battleScale,
-    );
-    await hud.add(heroShadow);
-
+    // Load enemy battle animations based on enemy type
     final String enemyFolder = switch (enemyType) {
       EnemyType.normal => 'characters/enemy/at_battle/orc/',
       EnemyType.strong => 'characters/enemy/at_battle/plant/',
@@ -322,32 +300,84 @@ class BattleScene extends Component with HasGameReference<MyGame> {
       EnemyType.boss => 'characters/enemy/at_battle/vampire/',
     };
 
-    // Helper to create animation from a single-row sprite sheet png
-    SpriteAnimation createAnimFromSheet(ui.Image img, Vector2 frameSize,
-        double step, int frames,
-        {bool loop = true}) {
-      final sheet = SpriteSheet(image: img, srcSize: frameSize);
-      return sheet.createAnimation(row: 0, from: 0, to: frames - 1, stepTime: step, loop: loop);
-    }
-
-    // Load all enemy battle pngs (idle, attack, hurt, death). If any missing,
-    // fall back to a single static Joanna.png sprite.
+    // Modular enemy animation system with configurable frame sizes
+    Map<String, SpriteAnimation> enemyAnimations = {};
     try {
-      final ui.Image eIdle = await game.images.load('${enemyFolder}idle.png');
-      final ui.Image eAttack = await game.images.load('${enemyFolder}attack.png');
-      final ui.Image eHurt = await game.images.load('${enemyFolder}hurt.png');
-      final ui.Image eDeath = await game.images.load('${enemyFolder}death.png');
+      // Load sprite images (see attachments for actual images)
+      final ui.Image eIdle = await game.images.load(
+        '${enemyFolder}idle.png',
+      ); // 4 frames, 64x64 each
+      final ui.Image eAttack = await game.images.load(
+        '${enemyFolder}attack.png',
+      ); // 6 frames, 64x64 each
+      final ui.Image eHurt = await game.images.load(
+        '${enemyFolder}hurt.png',
+      ); // 6 frames, 64x64 each
+      final ui.Image eDeath = await game.images.load(
+        '${enemyFolder}death.png',
+      ); // 8 frames, 64x64 each
 
-      final Vector2 eIdleFrame = Vector2(eIdle.height.toDouble(), eIdle.height.toDouble());
-      final Vector2 eAttackFrame = Vector2(eAttack.height.toDouble(), eAttack.height.toDouble());
-      final Vector2 eHurtFrame = Vector2(eHurt.height.toDouble(), eHurt.height.toDouble());
-      final Vector2 eDeathFrame = Vector2(eDeath.height.toDouble(), eDeath.height.toDouble());
+      // Frame sizes based on provided images
+      const frameWidth = 64.0;
+      const frameHeight = 64.0;
 
-      // Create animations
-      _enemyIdleAnim = createAnimFromSheet(eIdle, eIdleFrame, _kIdleStep, (eIdle.width / eIdleFrame.x).floor());
-      _enemyAttackAnim = createAnimFromSheet(eAttack, eAttackFrame, _kAttackStep, (eAttack.width / eAttackFrame.x).floor(), loop: false);
-      _enemyHurtAnim = createAnimFromSheet(eHurt, eHurtFrame, _kHurtStep, (eHurt.width / eHurtFrame.x).floor(), loop: false);
-      _enemyDeathAnim = createAnimFromSheet(eDeath, eDeathFrame, _kDeadStep, (eDeath.width / eDeathFrame.x).floor(), loop: false);
+      // Frame counts based on image widths
+      final idleFrameCount = (eIdle.width / frameWidth).floor(); // 4
+      final attackFrameCount = (eAttack.width / frameWidth).floor(); // 6
+      final hurtFrameCount = (eHurt.width / frameWidth).floor(); // 6
+      final deathFrameCount = (eDeath.width / frameWidth).floor(); // 8
+
+      // SpriteSheets
+      final idleSheet = SpriteSheet(
+        image: eIdle,
+        srcSize: Vector2(frameWidth, frameHeight),
+      );
+      final attackSheet = SpriteSheet(
+        image: eAttack,
+        srcSize: Vector2(frameWidth, frameHeight),
+      );
+      final hurtSheet = SpriteSheet(
+        image: eHurt,
+        srcSize: Vector2(frameWidth, frameHeight),
+      );
+      final deathSheet = SpriteSheet(
+        image: eDeath,
+        srcSize: Vector2(frameWidth, frameHeight),
+      );
+
+      // Animations (all use row 0)
+      enemyAnimations['idle'] = idleSheet.createAnimation(
+        row: 0,
+        from: 0,
+        to: idleFrameCount - 1,
+        stepTime: _kIdleStep,
+        loop: true,
+      );
+      enemyAnimations['attack'] = attackSheet.createAnimation(
+        row: 0,
+        from: 0,
+        to: attackFrameCount - 1,
+        stepTime: _kAttackStep,
+        loop: false,
+      );
+      enemyAnimations['hurt'] = hurtSheet.createAnimation(
+        row: 0,
+        from: 0,
+        to: hurtFrameCount - 1,
+        stepTime: _kHurtStep,
+        loop: false,
+      );
+      enemyAnimations['death'] = deathSheet.createAnimation(
+        row: 0,
+        from: 0,
+        to: deathFrameCount - 1,
+        stepTime: _kDeadStep,
+        loop: false,
+      );
+
+      // Store animation references for compatibility
+      _enemyIdleAnim = enemyAnimations['idle']!;
+      _enemyAnims = enemyAnimations;
 
       enemyAnim = SpriteAnimationComponent(
         animation: _enemyIdleAnim,
@@ -355,10 +385,15 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         anchor: Anchor.bottomCenter,
         position: Vector2(centerX + halfGap, baselineY),
         priority: 10,
-      )..scale = Vector2(1, 1);
+      )..scale = Vector2(1.4, 1.4);
       enemy = enemyAnim;
+
       await hud.add(enemyAnim);
+
+      // Create sprite sheets with standard frame sizes
+      // ...existing code for new animation logic...
     } catch (e) {
+      // Fallback: keep the old Joanna static sprite so app doesn't crash if assets missing
       enemy = SpriteComponent(
         sprite: await Sprite.load('Joanna.png'),
         size: actorSize,
@@ -367,21 +402,20 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         priority: 10,
       )..scale = Vector2(1, 1);
       await hud.add(enemy);
+      // fallback: use hero idle anim for enemyAnim if needed
       _enemyIdleAnim = _idleAnim;
+      _enemyAnims = {
+        'idle': _idleAnim,
+        'attack': _idleAnim,
+        'hurt': _idleAnim,
+        'death': _idleAnim,
+      };
     }
-
-    enemyShadow = _shadowAt(
-      enemy.position,
-      z: 9,
-      width: 36 * battleScale,
-      height: 10 * battleScale,
-    );
-    await hud.add(enemyShadow);
 
     // Load quiz & start turn
     _quizRepo = QuizRepository();
     _pool = await _quizRepo.loadTopic(_topic);
-    final hurtSheet = SpriteSheet(image: hurtImg, srcSize: _kHurtFrameSize);
+    final hurtSheet = SpriteSheet(image: hurtImg, srcSize: _kHeroHurtFrameSize);
     await _nextTurn(attackSheet, deadSheet, hurtSheet);
   }
 
@@ -414,6 +448,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
           enemyHealth.damage(1);
           await _hitFx(enemy.position);
 
+          // play enemy hurt animation if available
           await _playEnemyHurtOnce();
 
           await Future.delayed(
@@ -427,8 +462,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
             // play death animation
             await _playEnemyDeathOnce();
             final xp = _xpRewardFor(enemyType);
-            final gold = _goldRewardFor(enemyType);
-            onEnd(BattleResult.win(xp: xp, gold: gold));
+            onEnd(BattleResult.win(xp: xp));
             return;
           }
 
@@ -437,8 +471,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         } else {
           heroHealth.damage(1);
           await _hitFx(heroRoot.position);
+          // play hurt animation on hero
           await _playHeroHurtOnce(hurtSheet);
 
+          // enemy attacks when player is incorrect
           await _playEnemyAttackOnce();
 
           if (heroHealth.isDead) {
@@ -514,38 +550,38 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await Future.delayed(Duration(milliseconds: durMs));
   }
 
-  // Enemy animation helpes
-  Future<void> _playEnemyAnimationOnce(SpriteAnimation? anim, int frameCount, double step) async {
+  Future<void> _playEnemyAnim(String type) async {
+    if (enemy is! SpriteAnimationComponent) return;
+    final comp = enemy as SpriteAnimationComponent;
+    final anim = _enemyAnims[type];
     if (anim == null) return;
-    if (enemyAnim.isMounted) {
-      enemyAnim.animation = anim;
-      final durMs = (frameCount * step * 1000).round();
-      await Future.delayed(Duration(milliseconds: durMs));
-      if (enemyAnim.isMounted) {
-        if (anim != _enemyDeathAnim) {
-          enemyAnim.animation = _enemyIdleAnim;
-        }
-      }
+
+    // Set the animation - this will automatically cycle through frames
+    comp.animation = anim;
+
+    // Calculate total duration from all frames
+    double totalDuration = 0;
+    for (final frame in anim.frames) {
+      totalDuration += frame.stepTime;
+    }
+
+    // Wait for animation to complete
+    final durMs = (totalDuration * 1000).round();
+    await Future.delayed(Duration(milliseconds: durMs));
+
+    // Return to idle animation (except for death)
+    if (type != 'death' && comp.isMounted) {
+      comp.animation = _enemyAnims['idle']!;
     }
   }
 
-  Future<void> _playEnemyAttackOnce() async {
-    if (_enemyAttackAnim == null) return;
-    final frames = (_enemyAttackAnim!.frames.length);
-    await _playEnemyAnimationOnce(_enemyAttackAnim, frames, _kAttackStep);
-  }
+  // Enemy animation helpers
+  // Removed unused _playEnemyAnimationOnce helper
 
-  Future<void> _playEnemyHurtOnce() async {
-    if (_enemyHurtAnim == null) return;
-    final frames = (_enemyHurtAnim!.frames.length);
-    await _playEnemyAnimationOnce(_enemyHurtAnim, frames, _kHurtStep);
-  }
-
-  Future<void> _playEnemyDeathOnce() async {
-    if (_enemyDeathAnim == null) return;
-    final frames = (_enemyDeathAnim!.frames.length);
-    await _playEnemyAnimationOnce(_enemyDeathAnim, frames, _kDeadStep);
-  }
+  // Use the new modular animation helpers
+  Future<void> _playEnemyAttackOnce() async => _playEnemyAnim('attack');
+  Future<void> _playEnemyHurtOnce() async => _playEnemyAnim('hurt');
+  Future<void> _playEnemyDeathOnce() async => _playEnemyAnim('death');
 
   // combat fx
   Future<void> _hitFx(Vector2 at) async {
@@ -560,20 +596,6 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await fx.add(OpacityEffect.fadeOut(EffectController(duration: 0.15)));
     await Future.delayed(const Duration(milliseconds: 160));
     fx.removeFromParent();
-  }
-
-  PositionComponent _shadowAt(
-    Vector2 pos, {
-    int z = 0,
-    double width = 36,
-    double height = 10,
-  }) {
-    return _ShadowOval(
-      width: width,
-      height: height,
-      position: pos + Vector2(0, 2 * (width / 36)),
-      z: z,
-    );
   }
 }
 
@@ -612,32 +634,3 @@ class TextButtonHud extends PositionComponent with TapCallbacks {
   @override
   void onTapCancel(TapCancelEvent event) => _down = false;
 }
-
-class _ShadowOval extends PositionComponent {
-  final int z;
-
-  _ShadowOval({
-    required double width,
-    required double height,
-    required Vector2 position,
-    this.z = 0,
-  }) : super(
-         position: position,
-         size: Vector2(width, height),
-         anchor: Anchor.center,
-         priority: z,
-       );
-
-  @override
-  void render(ui.Canvas canvas) {
-    final paint = ui.Paint()..color = const ui.Color.fromARGB(33, 0, 0, 0);
-    final rect = size.toRect().shift(ui.Offset(-size.x / 2, -size.y / 2));
-    canvas.drawOval(rect, paint);
-  }
-}
-
-
-
-
-
-

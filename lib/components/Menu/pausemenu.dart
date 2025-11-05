@@ -65,8 +65,8 @@ class NavPauseMenu extends StatelessWidget {
             ),
             onPressed: () {
               game.resumeEngine();
-              game.overlays.add('PauseButton'); // hiện lại nút pause
-              game.overlays.remove('PauseMenu'); // tắt menu
+              game.overlays.add('MainMenu'); // hiện lại nút pause
+              //game.overlays.remove('PauseMenu'); // tắt menu
             },
             child: SizedBox(
               height: btnSize,
