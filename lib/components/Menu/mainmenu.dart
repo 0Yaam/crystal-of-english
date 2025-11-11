@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mygame/components/Menu/flashcard/screen/decklist/deckwelcome.dart';
 import 'package:mygame/components/Menu/usersetting/setting.dart';
 import 'package:mygame/main.dart';
 // removed unused imports (cleaned up after switching to text labels)
@@ -92,7 +93,11 @@ class MenuNav extends StatelessWidget {
             errorBuilder: (c, e, s) => const Center(
               child: Text(
                 'Crystal of English',
-                style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -104,7 +109,10 @@ class MenuNav extends StatelessWidget {
         GestureDetector(
           onTap: () async {
             if (kIsWeb) {
-              await AudioManager.instance.playBgm('audio/bgm_overworld.mp3', volume: 0.4);
+              await AudioManager.instance.playBgm(
+                'audio/bgm_overworld.mp3',
+                volume: 0.4,
+              );
             }
             // hide main menu and start/resume game
             game.overlays.remove('MainMenu');
@@ -126,7 +134,9 @@ class MenuNav extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SaveLoadScreen(game: game)),
+              MaterialPageRoute(
+                builder: (context) => SaveLoadScreen(game: game),
+              ),
             );
           },
           child: const Text(
@@ -160,6 +170,19 @@ class MenuNav extends StatelessWidget {
           },
           child: const Text(
             'Exit',
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          ),
+        ),
+        const SizedBox(height: 16),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DeckListScreen()),
+            );
+          },
+          child: const Text(
+            'Flash Card',
             style: TextStyle(color: Colors.white, fontSize: 24),
           ),
         ),

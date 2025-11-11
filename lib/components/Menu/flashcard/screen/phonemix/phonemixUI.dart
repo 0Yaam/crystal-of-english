@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mygame/components/Menu/Theme/color.dart';
+import 'package:mygame/components/Menu/flashcard/screen/phonemix/phonemixNoti.dart';
+import 'package:provider/provider.dart';
 
 class PhoneMixUI extends StatefulWidget {
   const PhoneMixUI({super.key});
@@ -8,42 +10,15 @@ class PhoneMixUI extends StatefulWidget {
   State<PhoneMixUI> createState() => _PhoneMixUIState();
 }
 
-class WordIPA {
-  final String word;
-  final String ipa;
-  WordIPA({required this.word, required this.ipa});
-}
-
 class _PhoneMixUIState extends State<PhoneMixUI> {
-  int? selectedIndex;
-  int? selectedWordIDX;
-  int? selectedIPAIDX;
-  bool right = true;
-  bool answered = false;
-  List<WordIPA> options = [
-    WordIPA(word: "one", ipa: "/wʌn/"),
-    WordIPA(word: "two", ipa: "/tuː/"),
-    WordIPA(word: "three", ipa: "/θriː/"),
-    WordIPA(word: "four", ipa: "/fɔːr/"),
-  ];
-  List<String> word = [];
-  List<String> ipa = [];
-  List<bool> doneWord = [false, false, false, false];
-  List<bool> doneIPA = [false, false, false, false];
-
-  ButtonState wordState = ButtonState.normal;
-  ButtonState ipaState = ButtonState.normal;
-  @override
-  void initState() {
-    super.initState();
-    word = options.map((e) => e.word).toList();
-    word.shuffle();
-    ipa = options.map((e) => e.ipa).toList();
-    ipa.shuffle();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<phoneMixNoti>();
+    final reader = context.read<phoneMixNoti>();
+    provider.setOptionList();
+    final word = provider.getWord();
+    final ipa = provider.getIPA();
+
     return Scaffold(
       backgroundColor: AppColor.darkBase,
       appBar: AppBar(
@@ -63,7 +38,7 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
           ],
         ),
         title: LinearProgressIndicator(
-          value: 0.1,
+          value: provider.value,
           backgroundColor: AppColor.darkCard,
           valueColor: AlwaysStoppedAnimation<Color>(AppColor.greenPrimary),
           minHeight: 18,
@@ -102,61 +77,19 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
                         return Center(
                           child: ChoiceBtn(
                             value: word[index],
-                            state: doneWord[index]
-                                ? ButtonState.done
-                                : selectedWordIDX == index
-                                ? wordState
-                                : ButtonState.normal,
-                            onPressed: () {
-                              if (selectedIPAIDX != null) {
-                                setState(() {
-                                  if (selectedWordIDX != index) {
-                                    selectedWordIDX= index;
-                                    wordState = ButtonState.selected;
-                                  } else {
-                                    selectedWordIDX = null;
-                                    wordState = ButtonState.normal;
-                                  }
-                                });
-                                var find = options.where(
-                                  (o) => o.word == word[selectedWordIDX!],
-                                );
-                                if (word[index] == find.first.word) {
-                                  doneWord[selectedWordIDX!] = true;
-                                  doneIPA[selectedIPAIDX!] = true;
-                                  selectedWordIDX = null;
-                                  selectedIPAIDX = null;
-                                  if (doneWord
-                                      .where((d) => d == false)
-                                      .isEmpty) {
-                                    setState(() {
-                                      answered = true;
-                                    });
-                                  }
-                                } else {
-                                  selectedWordIDX = null;
-                                  selectedIPAIDX = null;
-                                }
-                              } else {
-                                setState(() {
-                                  if (selectedWordIDX == index) {
-                                    selectedWordIDX = null;
-                                    wordState = ButtonState.normal;
-                                  } else {
-                                    selectedWordIDX = index;
-                                    wordState = ButtonState.selected;
-                                  }
-                                });
-                              }
+                            state: provider.wordState[index],
+                            onChoose: () {
+                              reader.selectWord(index);
                             },
                           ),
                         );
                       },
                     ),
-                    SizedBox(width: 50),
+                    
                   ],
                 ),
               ),
+              SizedBox(width: 50),
               Container(
                 height: 125,
                 width: 750,
@@ -164,93 +97,37 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ListView.builder(
-                      itemCount: options.length,
+                      itemCount: ipa.length,
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return Center(
                           child: ChoiceBtn(
                             value: ipa[index],
-                            state: doneIPA[index]
-                                ? ButtonState.done
-                                : selectedIPAIDX == index
-                                ? ipaState
-                                : ButtonState.normal,
-                            onPressed: () {
-                              print(
-                                "i been touch mf${selectedIPAIDX?.toString() ?? "-1"}",
-                              );
-
-                              if (selectedWordIDX != null) {
-                                print("int not first time");
-                                setState(() {
-                                  if (selectedIPAIDX != index) {
-                                    print("in to seleted");
-                                    selectedIPAIDX = index;
-                                    ipaState = ButtonState.selected;
-                                  } else {
-                                    print("back to normal");
-                                    selectedIPAIDX = null;
-                                    ipaState = ButtonState.normal;
-                                  }
-                                });
-                                var find = options.where(
-                                  (o) => o.word == word[selectedWordIDX!],
-                                );
-                                if (ipa[index] == find.first.ipa) {
-                                  doneWord[selectedWordIDX!] = true;
-                                  doneIPA[selectedIPAIDX!] = true;
-                                  selectedWordIDX = null;
-                                  selectedIPAIDX = null;
-                                  if (doneWord
-                                      .where((d) => d == false)
-                                      .isEmpty) {
-                                    setState(() {
-                                      answered = true;
-                                    });
-                                  }
-                                } else {
-                                  selectedWordIDX = null;
-                                  selectedIPAIDX = null;
-                                }
-                              } else {
-                                print("at else");
-                                setState(() {
-                                  if (selectedIPAIDX == index) {
-                                    print("turn to normal");
-
-                                    ipaState = ButtonState.normal;
-                                    selectedIPAIDX = null;
-                                  } else {
-                                    selectedIPAIDX = index;
-                                    ipaState = ButtonState.selected;
-                                  }
-                                });
-                                print(
-                                  "end with${selectedIPAIDX?.toString() ?? "-1"}",
-                                );
-                              }
+                            state: provider.ipaState[index],
+                            onChoose: () {
+                              reader.selectIPA(index);
                             },
                           ),
                         );
                       },
                     ),
-                    SizedBox(width: 50),
                   ],
                 ),
               ),
+              SizedBox(width: 50),
             ],
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCubic,
-            bottom: answered ? 0 : -MediaQuery.of(context).size.height,
+            bottom: provider.answer ? 0 : -MediaQuery.of(context).size.height,
             left: 0,
             right: 0,
             height: MediaQuery.of(context).size.height,
             child: ReviewScreen(
-              right: right,
               onPressed: () {
+                reader.NextTask();
                 // context.read<Mindfieldnoti>().nextCard();
                 // setState(() {
                 //   answered=false;
@@ -271,8 +148,7 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
 }
 
 class ReviewScreen extends StatelessWidget {
-  ReviewScreen({super.key, required this.right, required this.onPressed});
-  final bool right;
+  ReviewScreen({super.key, required this.onPressed});
   VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
@@ -280,7 +156,7 @@ class ReviewScreen extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: SizedBox(
         width: double.infinity,
-        height: right ? 250 : 350,
+        height: 250,
         child: Container(
           color: AppColor.darkSurface,
           child: Column(
@@ -315,7 +191,7 @@ class ReviewScreen extends StatelessWidget {
                         onPressed.call();
                       },
                       style: ElevatedButton.styleFrom(
-                        elevation: right ? 10 : 4,
+                        elevation: 10,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -338,9 +214,8 @@ class ReviewScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           border: Border(
                             bottom: BorderSide(
-                              color: right
-                                  ? AppColor.greenAccent
-                                  : AppColor.redMuted,
+                              color: AppColor.greenAccent,
+
                               width: 6,
                             ),
                           ),
@@ -359,17 +234,17 @@ class ReviewScreen extends StatelessWidget {
   }
 }
 
-enum ButtonState { normal, selected, done }
+enum ButtonState { normal, selected, done, wrong }
 
 class ChoiceBtn extends StatelessWidget {
   String value;
   ButtonState state;
-  VoidCallback? onPressed;
+  VoidCallback? onChoose;
   ChoiceBtn({
     super.key,
     required this.state,
     required this.value,
-    required this.onPressed,
+    required this.onChoose,
   });
 
   @override
@@ -394,6 +269,11 @@ class ChoiceBtn extends StatelessWidget {
         borderColor = AppColor.darkCard;
         textColor = Colors.white;
         break;
+      case ButtonState.wrong:
+        backgroundColor = AppColor.darkSurface;
+        borderColor = AppColor.redMuted;
+        textColor = AppColor.redMuted;
+        break;
     }
 
     return Padding(
@@ -402,7 +282,11 @@ class ChoiceBtn extends StatelessWidget {
         width: 150,
         height: 70,
         child: ElevatedButton(
-          onPressed: onPressed,
+          onPressed: () {
+            if (state != ButtonState.done) {
+              onChoose?.call();
+            }
+          },
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -415,7 +299,7 @@ class ChoiceBtn extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'Roboto',
               color: textColor,
-              fontSize: 28,
+              fontSize: 22,
             ),
           ),
         ),
