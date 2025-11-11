@@ -127,17 +127,24 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
             height: MediaQuery.of(context).size.height,
             child: ReviewScreen(
               onPressed: () {
+<<<<<<< HEAD
                 reader.NextTask();
                 // context.read<Mindfieldnoti>().nextCard();
                 // setState(() {
                 //   answered=false;
                 //   selectedIndex=null;
+=======
+>>>>>>> 7360b56b49163a48afced0ff5cc1644d9376d2ef
 
-                //   Future.delayed(Duration(milliseconds: 400),()
-                //   {
-                //     right=false;
-                //   });
-                // });
+
+
+
+
+
+
+
+
+
               },
             ),
           ),

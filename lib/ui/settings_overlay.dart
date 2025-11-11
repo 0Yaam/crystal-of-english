@@ -39,7 +39,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
       child: SafeArea(
         child: Stack(
           children: [
-            // Buttons + Settings panel
+
             Align(
               alignment: Alignment.topRight,
               child: Padding(
@@ -48,7 +48,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Settings button
+
                     Material(
                       color: Colors.black.withOpacity(0.35),
                       borderRadius: BorderRadius.circular(10),
@@ -66,7 +66,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    // Inventory button
+
                     Material(
                       color: Colors.black.withOpacity(0.35),
                       borderRadius: BorderRadius.circular(10),
@@ -86,7 +86,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
 
                     if (open) const SizedBox(height: 8),
 
-                    // Settings panel
+
                     if (open)
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 280),
@@ -121,7 +121,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                                 ),
                                 const SizedBox(height: 8),
 
-                                // BGM toggle + slider
+
                                 Row(
                                   children: [
                                     Switch(
@@ -146,7 +146,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
                                 ),
                                 const SizedBox(height: 4),
 
-                                // SFX toggle + slider
+
                                 Row(
                                   children: [
                                     Switch(
@@ -179,7 +179,7 @@ class _SettingsOverlayState extends State<SettingsOverlay> {
               ),
             ),
 
-            // Inventory panel
+
             if (invOpen)
               Align(
                 alignment: Alignment.topRight,

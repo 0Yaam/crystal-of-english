@@ -29,7 +29,7 @@ class SpeechBubble extends PositionComponent {
   })  : textPaint = textPaint ??
             TextPaint(
               style: const TextStyle(
-                fontFamily: 'MyFont', 
+                fontFamily: 'MyFont',
                 fontSize: 7,
                 color: Color.fromARGB(255, 53, 53, 53),
                 height: 1.2,

@@ -1,7 +1,7 @@
 import 'package:mygame/components/Menu/flashcard/business/Deck.dart';
 import 'package:mygame/components/Menu/flashcard/business/Flashcard.dart';
 
-// Web stub: in-memory store for demo purposes
+
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._();
   DatabaseHelper._();
@@ -38,7 +38,7 @@ class DatabaseHelper {
     if (list == null) return;
     final idx = list.indexWhere((c) => c.id == card.id);
     if (idx != -1) {
-      // Replace with updated fields (keep unchanged fields if null)
+
       final old = list[idx];
       final updated = Flashcard(
         id: old.id,
@@ -100,7 +100,7 @@ class DatabaseHelper {
   Future<String> MoveMediaFile() async => '';
   Future<String?> getMediaFile(int deckID) async => null;
 
-  // Player profile (web in-memory)
+
   final Map<int, Map<String, Object?>> _profiles = {};
 
   Future<void> savePlayerProfileSlot(

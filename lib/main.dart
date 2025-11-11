@@ -49,7 +49,7 @@ void main() async {
   ]);
 
   await AudioManager.instance.init();
-  // initialize persisted player profile (reads saved placement/deck level)
+
   await PlayerProfile.instance.init();
 
   final deckModel = Deckmodel();
@@ -63,7 +63,7 @@ void main() async {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // ⚠️ Bảo đảm font 'MyFont' có hỗ trợ tiếng Việt (VD: Noto Sans/Roboto).
+
         theme: ThemeData(fontFamily: 'MyFont'),
         home: GameWidget(
           game: MyGame(),
@@ -92,7 +92,7 @@ void main() async {
                     extendBodyBehindAppBar: true,
                     appBar: AppBar(
                       backgroundColor:
-                          Colors.transparent, 
+                          Colors.transparent,
                       elevation: 0,
                       title: const Text('Flashcards'),
                       leading: IconButton(
@@ -186,7 +186,7 @@ class MyGame extends FlameGame
       priority: 0,
     );
     await world.add(map);
-    // initial current map value
+
     currentMapFile = 'map.tmx';
 
     await _initMapObjects('map.tmx');
@@ -230,7 +230,7 @@ class MyGame extends FlameGame
     dialogManager.onRequestOpenOverlay = () {
       overlays.add(DialogOverlay.id);
       _lockControls(true);
-      // Giữ nút cài đặt nổi trên cùng
+
       if (overlays.isActive(SettingsOverlay.id)) {
         overlays.remove(SettingsOverlay.id);
         overlays.add(SettingsOverlay.id);
@@ -302,17 +302,17 @@ class MyGame extends FlameGame
   }
 
   Future<void> _initMapObjects(String mapFile) async {
-    // decide spawn difficulty based on player profile
+
     final effectiveLevel = PlayerProfile.instance.effectiveLevel();
     int _slotCounter = 0;
 
     EnemyType _enemyForSlot(int level, int slot) {
-      // Simple deterministic mapping: slot used to distribute types
-      // level 1 -> all normal
-      // level 2 -> normal, strong
-      // level 3 -> strong, miniboss
-      // level 4 -> miniboss, strong
-      // level 5 -> miniboss, boss
+
+
+
+
+
+
       switch (level) {
         case 1:
           return EnemyType.normal;
@@ -555,7 +555,7 @@ class MyGame extends FlameGame
     if (_inBattle) return;
     _inBattle = true;
 
-    // autosave before entering battle
+
     try {
       await PlayerProfile.instance.saveSnapshot(
         mapFile: currentMapFile,
@@ -587,7 +587,7 @@ class MyGame extends FlameGame
 
     heartsHud.removeFromParent();
 
-    // Tạm dừng nhạc nền khi vào trận chiến
+
     await AudioManager.instance.pauseBgm();
 
     _battleScene = BattleScene(
@@ -633,10 +633,10 @@ class MyGame extends FlameGame
       player.position = Vector2(1255, 655);
     }
 
-    // Tiếp tục nhạc nền khi thoát trận chiến
+
     AudioManager.instance.resumeBgm();
 
-    // Khôi phục overlay cài đặt sau trận
+
     if (!overlays.isActive(SettingsOverlay.id)) {
       overlays.add(SettingsOverlay.id);
     }
@@ -648,7 +648,7 @@ class MyGame extends FlameGame
     Vector2? spawnTile,
     double tileSize = 16,
   }) async {
-    // autosave current state before switching maps
+
     try {
       await PlayerProfile.instance.saveSnapshot(
         mapFile: currentMapFile,
@@ -669,7 +669,7 @@ class MyGame extends FlameGame
     await add(newWorld);
     world = newWorld;
 
-    // Set scale for dungeon.tmx
+
     if (mapFile == 'dungeon.tmx') {
       map = await ft.TiledComponent.load(
         mapFile,
@@ -790,7 +790,7 @@ class MyGame extends FlameGame
       );
     }
 
-    // update current map pointer and autosave after successful load
+
     currentMapFile = mapFile;
     try {
       await PlayerProfile.instance.saveSnapshot(

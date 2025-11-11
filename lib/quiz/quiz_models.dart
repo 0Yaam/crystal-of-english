@@ -41,7 +41,7 @@ class QuizRepository {
   Future<List<QuizQuestion>> loadTopic(String topic) async {
     final candidates = <String>[
       'assets/quiz/$topic/$topic.json',
-      'assets/quiz/$topic/animals.json', 
+      'assets/quiz/$topic/animals.json',
     ];
 
     String? raw;
@@ -62,7 +62,7 @@ class QuizRepository {
     final list = (data['questions'] as List).cast<Map<String, dynamic>>();
     final questions = list.map((m) => QuizQuestion.fromMap(m, topic)).toList();
 
-    //random questions
+
     questions.shuffle(Random());
 
     return questions;

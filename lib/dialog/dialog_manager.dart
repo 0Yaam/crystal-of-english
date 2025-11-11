@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class Portrait {
   final String asset;
-  final Rect? src;   
-  final Size size;    
+  final Rect? src;
+  final Size size;
   const Portrait({required this.asset, this.src, this.size = const Size(64, 64)});
 }
 
 class DialogueLine {
   final String text;
   final Portrait? speaker;
-  final String? type; // 'text'|'image'|'sound'|'imagesound'
+  final String? type;
   final String? image;
   final String? sound;
   const DialogueLine(
@@ -76,7 +76,7 @@ class DialogManager {
     if (right != null) currentRightPortrait.value = right;
   }
 
-  /// Đóng overlay
+
   void close() {
     if (!_isOpen) return;
     _linear = null;
@@ -86,7 +86,7 @@ class DialogManager {
     onRequestCloseOverlay?.call();
   }
 
-  // ========== DÒNG TUYẾN TÍNH ==========
+
 
   List<DialogueLine>? _linear;
   int _cursor = -1;
@@ -99,11 +99,11 @@ class DialogManager {
     final line = _linear![_cursor];
     currentText.value = line.text;
     if (line.speaker != null) currentPortrait.value = line.speaker;
-  // set optional content fields if provided on the line
+
   currentType.value = line.type;
   currentImage.value = line.image;
   currentSound.value = line.sound;
-    currentChoices.value = const [];  
+    currentChoices.value = const [];
 
     if (!_isOpen) {
       _isOpen = true;
@@ -112,7 +112,7 @@ class DialogManager {
   }
 
   void advance() {
-    if (currentChoices.value.isNotEmpty) return; 
+    if (currentChoices.value.isNotEmpty) return;
     if (_linear == null) {
       close();
       return;
@@ -134,7 +134,7 @@ class DialogManager {
       return;
     }
 
-    //chạy callback
+
     if (c.onSelected != null) {
       c.onSelected!.call();
       return;

@@ -30,7 +30,7 @@ class QuestionCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal, // or other color per choice
+                    backgroundColor: Colors.teal,
                   ),
                   onPressed: () => onSelected(index),
                   child: Text(choices[index],

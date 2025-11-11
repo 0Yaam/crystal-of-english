@@ -6,7 +6,7 @@ class RightAction {
   const RightAction(this.label, this.onTap);
 }
 class ReturnButton extends StatelessWidget {
-  static const id = 'return_button'; //  
+  static const id = 'return_button';
   final ValueNotifier<List<RightAction>> actions;
 
   const ReturnButton({super.key, required this.actions});

@@ -46,10 +46,10 @@ class _CardlevelscreenState extends State<Cardlevelscreen> {
           shaderCallback: (Rect bounds) {
             return LinearGradient(
               colors: [
-                Color(0xFFB0BEC5), // Light silver
-                Color(0xFF90A4AE), // Medium gray
-                Color(0xFFCFD8DC), // Highlight
-                Color(0xFF607D8B), // Shadow
+                Color(0xFFB0BEC5),
+                Color(0xFF90A4AE),
+                Color(0xFFCFD8DC),
+                Color(0xFF607D8B),
               ],
               stops: [0.0, 0.3, 0.6, 1.0],
               begin: Alignment.topLeft,
@@ -70,10 +70,10 @@ class _CardlevelscreenState extends State<Cardlevelscreen> {
             shaderCallback: (Rect bounds) {
               return LinearGradient(
                 colors: [
-                  Color.fromARGB(255, 51, 107, 134), // Light silver
-                  Color.fromARGB(255, 29, 172, 89), // Medium gray
-                  Color.fromARGB(255, 189, 120, 216), // Highlight
-                  Color.fromARGB(255, 251, 254, 255), // Shadow
+                  Color.fromARGB(255, 51, 107, 134),
+                  Color.fromARGB(255, 29, 172, 89),
+                  Color.fromARGB(255, 189, 120, 216),
+                  Color.fromARGB(255, 251, 254, 255),
                 ],
                 stops: [0.0, 0.3, 0.6, 1.0],
                 begin: Alignment.topLeft,
@@ -115,10 +115,10 @@ class _CardlevelscreenState extends State<Cardlevelscreen> {
             shaderCallback: (Rect bounds) {
               return LinearGradient(
                 colors: [
-                  Color(0xFFB0BEC5), // Light silver
-                  Color(0xFF90A4AE), // Medium gray
-                  Color(0xFFCFD8DC), // Highlight
-                  Color(0xFF607D8B), // Shadow
+                  Color(0xFFB0BEC5),
+                  Color(0xFF90A4AE),
+                  Color(0xFFCFD8DC),
+                  Color(0xFF607D8B),
                 ],
                 stops: [0.0, 0.3, 0.6, 1.0],
                 begin: Alignment.topLeft,
@@ -157,10 +157,10 @@ class _CardlevelscreenState extends State<Cardlevelscreen> {
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             onTap: () {
-              
+
             },
             child: Container(
-              //height: 300,
+
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(horizontal: 8),
               width: 150,
@@ -169,7 +169,7 @@ class _CardlevelscreenState extends State<Cardlevelscreen> {
                   BoxShadow(
                     color: colors[index].withOpacity(
                       0.47,
-                    ), // Shadow color with opacity
+                    ),
                     offset: const Offset(1, 1),
                     blurRadius: 8,
                     spreadRadius: 2,

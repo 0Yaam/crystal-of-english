@@ -51,7 +51,7 @@ class _SaveLoadScreenState extends State<SaveLoadScreen> {
   }
 
   Future<void> _saveSlot(int slot) async {
-    // ensure PlayerProfile autosave state is persisted
+
     await PlayerProfile.instance.saveToSlot(slot);
     await _refresh();
     if (!mounted) return;
@@ -61,7 +61,7 @@ class _SaveLoadScreenState extends State<SaveLoadScreen> {
   Future<void> _loadSlot(int slot) async {
     await PlayerProfile.instance.loadFromSlot(slot);
     final data = await DatabaseHelper.instance.loadPlayerProfileSlot(slot);
-    // if we have a game reference and a map/position, try to teleport there
+
   if (widget.game != null && data != null) {
       final mapFile = data['map_file'] as String?;
       final px = (data['pos_x'] as num?)?.toDouble();

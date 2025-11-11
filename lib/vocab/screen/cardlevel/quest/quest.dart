@@ -56,7 +56,7 @@ class _QuestScreenState extends State<QuestScreen>
       body: Column(
         children: [
           const SizedBox(height: 10),
-          // 💰 Top bar (total money)
+
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             padding: const EdgeInsets.all(12),

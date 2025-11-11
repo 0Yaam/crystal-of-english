@@ -136,7 +136,7 @@ class _MindFeildUIState extends State<MindFeildUI> {
               setState(() {
                 answered=false;
                 selectedIndex=null;
-                
+
                 Future.delayed(Duration(milliseconds: 400),()
                 {
                   right=false;

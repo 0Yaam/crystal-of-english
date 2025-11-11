@@ -1,4 +1,4 @@
-// ignore: file_names
+
 import 'package:flutter/widgets.dart';
 import 'package:mygame/components/Menu/flashcard/data/database_helper.dart';
 
@@ -55,7 +55,7 @@ class Deckmodel with ChangeNotifier{
     notifyListeners();
   }
 
-  //add new deck to db and list
+
   Future<void> insertDeck(String name,{String? description}) async{
     Deck addDeck=Deck(name: name,description: description);
     int newId=await _dbhelper.insertDeck(addDeck);
@@ -63,7 +63,7 @@ class Deckmodel with ChangeNotifier{
     _decks.add(newDeck);
     await fetchDecks();
   }
-  
+
   Future<void> deleteDeck(int id) async{
     await _dbhelper.deleteDeck(id);
     _decks.removeWhere((d)=>d.id==id);
@@ -72,8 +72,8 @@ class Deckmodel with ChangeNotifier{
   Future<void> filePicker()async{
     final filePath = await _dbhelper.pickAndCopyFile();
     if (filePath == null || filePath.isEmpty) {
-      // Fallback: import from bundled asset for demo
-      // Ensure the APKG is declared in pubspec: assets/anki-deck/
+
+
       try {
         await (DatabaseHelper.instance as dynamic)
             .importFromAssetApkg('assets/anki-deck/IELTS - Advanced__Unit 02 - Time for a change.apkg');
@@ -83,7 +83,7 @@ class Deckmodel with ChangeNotifier{
     } else {
       final ankiDbPath = await _dbhelper.unzipApkgFile(filePath);
       if (ankiDbPath == null || ankiDbPath.isEmpty) {
-        return; // unzip failed or not supported
+        return;
       }
       await _dbhelper.importDataFromAnki(ankiDbPath);
     }

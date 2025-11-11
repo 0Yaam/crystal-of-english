@@ -14,8 +14,8 @@ class ExperienceBar extends PositionComponent {
   final LevelUpCallback? onLevelUp;
 
   int level;
-  int xp;  //tong exp hien tai
-  int xpToNext;  // mốc cần để lên level kế
+  int xp;
+  int xpToNext;
 
   ExperienceBar({
     this.width = 180,
@@ -28,7 +28,7 @@ class ExperienceBar extends PositionComponent {
     int priority = 100001,
   }) : super(priority: priority, anchor: Anchor.topLeft);
 
-  // cách tính số exp tiếp 
+
   int _nextReqForLevel(int lv) {
     if (lv <= 1) return 50;
     return (50 + (lv - 1) * 25 + ((lv - 1) * 5));
@@ -45,7 +45,7 @@ class ExperienceBar extends PositionComponent {
     while (add > 0) {
       final remain = xpToNext - xp;
       if (add >= remain) {
-        // lên level
+
         add -= remain;
         level += 1;
         xp = 0;
@@ -60,7 +60,7 @@ class ExperienceBar extends PositionComponent {
 
   @override
   void render(ui.Canvas canvas) {
-    // khung
+
     final bgRect = ui.Rect.fromLTWH(
       margin.left.toDouble(),
       margin.top.toDouble(),
@@ -71,7 +71,7 @@ class ExperienceBar extends PositionComponent {
     final bg = ui.Paint()..color = const ui.Color(0xFF1E293B);
     canvas.drawRRect(r, bg);
 
-    // fill
+
     final pct = xpToNext == 0 ? 0.0 : (xp / xpToNext).clamp(0.0, 1.0);
     final fillRect = ui.Rect.fromLTWH(
       margin.left.toDouble(),
@@ -85,7 +85,7 @@ class ExperienceBar extends PositionComponent {
       fill,
     );
 
-    // viền
+
     final border = ui.Paint()
       ..style = ui.PaintingStyle.stroke
       ..strokeWidth = 1

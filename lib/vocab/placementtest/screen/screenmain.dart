@@ -30,7 +30,7 @@ class _QuizAppState extends State<QuizApp> {
       'assets/quiz/placementtest/placementtest.json',
     );
 
-    // decode ra List<dynamic>
+
     final jsonList = (json.decode(raw) as List).cast<Map<String, dynamic>>();
 
     setState(() {
@@ -48,7 +48,7 @@ class _QuizAppState extends State<QuizApp> {
         builder: (_) => QuizScreen(
           questions: _questions,
           onFinish: (int finalScore) {
-            _onQuizEnd(finalScore); // nhận score thật
+            _onQuizEnd(finalScore);
           },
         ),
       ),
@@ -56,7 +56,7 @@ class _QuizAppState extends State<QuizApp> {
   }
 
   void _onQuizEnd(int finalScore) {
-    // compute proficiency level from percent and persist to PlayerProfile
+
     final percent = finalScore / _questions.length;
     int level;
     if (percent >= 0.85) {
@@ -71,14 +71,14 @@ class _QuizAppState extends State<QuizApp> {
       level = 1;
     }
 
-    // persist level (lazy init of PlayerProfile)
+
     try {
-      // Lazy import to avoid adding provider here; use shared preferences helper
-      // We import the PlayerProfile class which handles SharedPreferences
-      // NOTE: import added at top
+
+
+
       PlayerProfile.instance.setProficiencyLevel(level);
     } catch (e) {
-      // ignore errors—persistence is best-effort
+
     }
 
     Navigator.pushReplacement(
@@ -96,7 +96,7 @@ class _QuizAppState extends State<QuizApp> {
   void _restartQuiz() {
     setState(() {
       _score = 0;
-      _questions.shuffle(); // nếu muốn shuffle lại quiz
+      _questions.shuffle();
     });
     Navigator.pushReplacement(
       context,
@@ -120,7 +120,7 @@ class _QuizAppState extends State<QuizApp> {
         primaryColor: Colors.teal,
         scaffoldBackgroundColor: const Color(
           0xFF1E1E1E,
-        ), // tông tối giống Duolingo
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.tealAccent,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class GoalDropdown extends StatefulWidget {
   int userValue;
-  final void Function(int) onGoalSelected; // callback
+  final void Function(int) onGoalSelected;
   GoalDropdown({required this.onGoalSelected, required this.userValue});
   @override
   _GoalDropdownState createState() => _GoalDropdownState();
@@ -13,7 +13,7 @@ class _GoalDropdownState extends State<GoalDropdown> {
   @override
   void initState() {
     super.initState();
-    // Initialize from parent
+
     selectedGoal = widget.userValue.toString();
   }
   @override
@@ -21,7 +21,7 @@ class _GoalDropdownState extends State<GoalDropdown> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[900], // dark grey background
+        color: Colors.grey[900],
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonFormField<String>(
@@ -31,19 +31,19 @@ class _GoalDropdownState extends State<GoalDropdown> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.teal, // color when not focused
+              color: Colors.teal,
               width: 2,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: Colors.red, // color when focused
+              color: Colors.red,
               width: 2,
             ),
           ),
           filled: true,
-          fillColor: Colors.grey[900], // background color
+          fillColor: Colors.grey[900],
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
         icon: Icon(Icons.arrow_drop_down, color: Colors.tealAccent),
@@ -199,7 +199,7 @@ class _StreakLinearProgressState extends State<StreakLinearProgress> {
                 backgroundColor: Colors.white12,
                 valueColor: const AlwaysStoppedAnimation(
                   Colors.white,
-                ), // color ignored by shader
+                ),
               ),
             ),
           ),

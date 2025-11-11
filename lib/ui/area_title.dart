@@ -8,7 +8,7 @@ class AreaTitle extends PositionComponent {
   final double _fadeOut = 1.2;
   late TextComponent _text;
   late TextStyle _baseStyle;
-  double _t = 0.0;  
+  double _t = 0.0;
   bool _built = false;
   AreaTitle(this.title);
   @override
@@ -16,9 +16,9 @@ class AreaTitle extends PositionComponent {
     await super.onLoad();
     _baseStyle = const TextStyle(
       fontFamily: 'MyFont',
-      fontSize: 42, 
+      fontSize: 42,
       fontWeight: FontWeight.bold,
-      color: Colors.white,  
+      color: Colors.white,
       shadows: [
         Shadow(offset: Offset( 1, 0), color: Colors.black),
         Shadow(offset: Offset(-1, 0), color: Colors.black),
@@ -43,12 +43,12 @@ class AreaTitle extends PositionComponent {
         style: _baseStyle.copyWith(color: Colors.white.withOpacity(0)),
       ),
       anchor: Anchor.topCenter,
-      position: Vector2(viewportSize.x / 2, 50),  
+      position: Vector2(viewportSize.x / 2, 50),
       priority: 10000,
     );
 
     size = viewportSize;
-    add(_text); 
+    add(_text);
   }
 
   @override
@@ -66,7 +66,7 @@ class AreaTitle extends PositionComponent {
       final t2 = _t - _fadeIn - _hold;
       opacity = (1.0 - t2 / _fadeOut).clamp(0.0, 1.0);
     } else {
-      removeFromParent();  
+      removeFromParent();
       return;
     }
 

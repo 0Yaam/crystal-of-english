@@ -7,10 +7,10 @@ class InteractBadge extends PositionComponent
     with TapCallbacks, HasGameRef<MyGame> {
   final PositionComponent target;
   final VoidCallback onPressed;
-  final double radius;      
-  final double gapToCenter; 
+  final double radius;
+  final double gapToCenter;
 
-  bool _enabled = false;    
+  bool _enabled = false;
 
   InteractBadge({
     required this.target,
@@ -31,7 +31,7 @@ class InteractBadge extends PositionComponent
     super.update(dt);
     _follow();
 
-    //bán kính
+
     final p = gameRef.player;
     final dist = p.position.distanceTo(target.position);
     _enabled = dist <= radius;
@@ -42,19 +42,19 @@ class InteractBadge extends PositionComponent
     position = target.position + Vector2(0, gapToCenter);
   }
 
-  //nhận tap nếu tap nằm trong bounds của component
+
   @override
   void onTapDown(TapDownEvent event) {
     if (_enabled) onPressed();
   }
 
-  //invisible
+
   @override
   void render(Canvas canvas) {
-    // intentionally empty
-    // (Muốn debug vùng tap, bỏ comment 3 dòng dưới)
-    // final paint = Paint()..color = const Color(0x22FF0000);
-    // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), paint);
-    // canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), Paint()..style=PaintingStyle.stroke);
+
+
+
+
+
   }
 }

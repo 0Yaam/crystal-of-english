@@ -168,7 +168,7 @@ class _BlankWordQuizzState extends State<BlankWordQuizz> {
         Future.delayed(Duration(milliseconds: 400), () {
           if (!mounted) return;
           setState(() {
-            trueList[index] = true; // back to blue
+            trueList[index] = true;
           });
         });
         return false;

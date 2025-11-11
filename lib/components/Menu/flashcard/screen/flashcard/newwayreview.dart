@@ -8,10 +8,10 @@ import 'front.dart';
 import "back.dart";
 import 'dart:math';
 
-//audio player instance
+
 final AudioPlayer audio = AudioPlayer();
 
-//scafford
+
 class Newwayreview extends StatefulWidget {
   final int deckId;
   const Newwayreview({super.key, required this.deckId});
@@ -53,7 +53,7 @@ class _Newwayreview extends State<Newwayreview> {
             onPressed: () async {
               final cardModel = Provider.of<Cardmodel>(context, listen: false);
               await cardModel.undoLastReview();
-              // rewind the controller so the undone card is visible again
+
               controller.rewind();
             },
           ),
@@ -82,7 +82,7 @@ class _Newwayreview extends State<Newwayreview> {
   }
 }
 
-//chaange this to swipable stack
+
 class Swipeder extends StatefulWidget {
   const Swipeder({
     super.key,
@@ -123,7 +123,7 @@ class _SwipederState extends State<Swipeder> {
             switch (properties.direction) {
               case SwipeDirection.up:
                 return Opacity(
-                  
+
                   opacity: opacity,
                   child: CardLabel(
                     color: Colors.redAccent,
@@ -149,7 +149,7 @@ class _SwipederState extends State<Swipeder> {
               return SizedBox();
             }
             final itemIndex = (properties.index) % widget.cardWidgets!.length;
-            // track currently visible item for rating buttons
+
             _activeItem = itemIndex;
             return Stack(
               children: [Card(child: widget.cardWidgets?[itemIndex])],
@@ -165,15 +165,15 @@ class _SwipederState extends State<Swipeder> {
               runSpacing: 8,
               alignment: WrapAlignment.center,
               children: List.generate(6, (i) {
-                // i ranges 0..5: SM-2 quality
+
                 return ElevatedButton(
                   onPressed: () async {
-                    // apply rating to the active card
+
                     if (widget.cards == null || widget.cards!.isEmpty) return;
                     final card = widget.cards![_activeItem];
                     final cardModel = Provider.of<Cardmodel>(context, listen: false);
                     await cardModel.updateCardAfterReview(card, i);
-                    // advance the stack: choose direction visually
+
                     final dir = (i >= 3) ? SwipeDirection.down : SwipeDirection.up;
                     widget.controller.next(swipeDirection: dir);
                   },
@@ -237,7 +237,7 @@ class CardLabel extends StatelessWidget {
   }
 }
 
-//flip card item
+
 class FlashCardItem extends StatefulWidget {
   final Flashcard? card;
   final String? media;
@@ -256,9 +256,9 @@ class _FlashCardItemState extends State<FlashCardItem> {
       color: Color.fromARGB(0, 255, 1, 1),
       child: FlipCard(
         front: FrontSide(widget: widget),
-        //FrontSide(widget: widget)
+
         back: BackSide(key: backKey, card: widget.card!, media: widget.media),
-        //BackSide(key: backKey, card: widget.card!, media: widget.media)
+
         onFlipDone: (isFront) {
           if (isFront) {
             backKey.currentState?.playSound(

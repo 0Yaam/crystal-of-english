@@ -17,7 +17,7 @@ class FilePickerPlatform {
     FileType type = FileType.any,
     List<String>? allowedExtensions,
   }) async {
-    return null; // Not implemented in stub
+    return null;
   }
 }
 

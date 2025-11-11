@@ -18,14 +18,14 @@ class _DialogOverlayState extends State<DialogOverlay> {
     final size = MediaQuery.of(context).size;
     final manager = widget.manager;
 
-    // Determine dialog type to adjust NPC dialog height.
-    // If currentType is empty/null we treat it as an NPC-style dialog and
-    // use a shorter panel (approx 1/3 height). Otherwise use the larger
-    // panel used for quizzes/flashcards.
+
+
+
+
     final dialogType = manager.currentType.value ?? '';
   final isNpcDialog = dialogType.trim().isEmpty;
-  // NPC dialogs use 2/5 (~40%) of the screen height; quiz/flashcard keep 60%.
-  final panelFactor = isNpcDialog ? 0.4 : 0.6; // NPC: 2/5, others: 60%
+
+  final panelFactor = isNpcDialog ? 0.4 : 0.6;
     final panelH = size.height * panelFactor;
 
     return GestureDetector(
@@ -37,7 +37,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
       },
       child: Stack(
         children: [
-          // Avatar trái
+
           ValueListenableBuilder<Portrait?>(
             valueListenable: manager.currentPortrait,
             builder: (context, p, _) {
@@ -57,7 +57,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
             },
           ),
 
-          // Avatar phải (nếu có)
+
           ValueListenableBuilder<Portrait?>(
             valueListenable: manager.currentRightPortrait,
             builder: (context, p, _) {
@@ -77,7 +77,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
             },
           ),
 
-          // Panel dưới
+
           Align(
             alignment: Alignment.bottomCenter,
             child: SafeArea(
@@ -99,7 +99,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // LEFT: question area (half width)
+
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -115,7 +115,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                 if (imageRaw == null || imageRaw.isEmpty) {
                                   return Center(child: Text('Image not found', style: TextStyle(color: Colors.white)));
                                 }
-                                // Make the image take most of the left area
+
                                 return Center(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
@@ -165,7 +165,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                   ],
                                 );
                               } else {
-                                // text default: center both horizontally and vertically
+
                                 return Center(
                                   child: SingleChildScrollView(
                                     physics: const BouncingScrollPhysics(),
@@ -175,8 +175,8 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                       style: TextStyle(
                                         fontFamily: 'MyFont',
                                         color: Colors.white,
-                                        // Bigger base font for mobile readability
-                                        // Clamp to avoid extreme values on tablets/desktops
+
+
                                         fontSize: (size.height * 0.042).clamp(18.0, 44.0),
                                       ),
                                     ),
@@ -190,7 +190,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
 
                       SizedBox(width: size.width * 0.015),
 
-                      // RIGHT: answers area (half width)
+
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -207,7 +207,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                               final dialogType = manager.currentType.value ?? '';
                               final showLetters = dialogType == 'flashcard' || dialogType == 'quiz';
                               if (showLetters) {
-                                // Fill the available column height so 4 buttons nearly occupy full panel height
+
                                 return LayoutBuilder(
                                   builder: (context, constraints) {
                                     final totalH = constraints.maxHeight;
@@ -220,7 +220,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                       children: choices.asMap().entries.map((entry) {
                                         final i = entry.key;
                                         final c = entry.value;
-                                        final letter = String.fromCharCode(65 + i); // A, B, C, D
+                                        final letter = String.fromCharCode(65 + i);
                                         return Padding(
                                           padding: EdgeInsets.only(bottom: i == n - 1 ? 0 : gap),
                                           child: SizedBox(
@@ -245,7 +245,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                                   '$letter. ${c.text}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    // Larger answer text for mobile
+
                                                     fontSize: (size.height * 0.034).clamp(16.0, 30.0),
                                                     height: 1.15,
                                                   ),
@@ -261,7 +261,7 @@ class _DialogOverlayState extends State<DialogOverlay> {
                                   },
                                 );
                               } else {
-                                // NPC/dialog mode: fill column height evenly with buttons
+
                                 return LayoutBuilder(
                                   builder: (context, constraints) {
                                     final n = choices.length;
@@ -352,7 +352,7 @@ class _ChoiceButtonState extends State<_ChoiceButton> {
           widget.onPressed();
         },
         child: Container(
-          // make the small choice-like buttons scale with screen height
+
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.02,
             vertical: MediaQuery.of(context).size.height * 0.008,
@@ -367,9 +367,9 @@ class _ChoiceButtonState extends State<_ChoiceButton> {
             child: Text(
               widget.label,
               style: TextStyle(
-                fontFamily: 'MyFont', 
+                fontFamily: 'MyFont',
                 color: Colors.black,
-                // responsive font for the small choice button
+
                 fontSize: (MediaQuery.of(context).size.height * 0.022).clamp(12.0, 20.0),
                 height: 1.25,
               ),

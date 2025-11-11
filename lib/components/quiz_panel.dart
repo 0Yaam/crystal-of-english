@@ -1,5 +1,5 @@
 import 'dart:ui' as ui;
-import 'dart:math'; // Added import for min function
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -28,7 +28,7 @@ class NineSliceSprite extends PositionComponent {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Load all 9 slice images
+
     final topLeft = await _loadImage('${assetPath}TopLeft.png');
     final top = await _loadImage('${assetPath}Top.png');
     final topRight = await _loadImage('${assetPath}TopRight.png');
@@ -52,15 +52,15 @@ class NineSliceSprite extends PositionComponent {
       return;
     }
 
-    // Determine slice size automatically from corner if not provided
+
     final double s =
         sliceSize ?? min(topLeft.width.toDouble(), topLeft.height.toDouble());
 
-    // Calculate dimensions
+
     final centerWidth = size.x - s * 2;
     final centerHeight = size.y - s * 2;
 
-    // Add corner pieces
+
     await add(
       SpriteComponent(
         sprite: Sprite(topLeft),
@@ -97,7 +97,7 @@ class NineSliceSprite extends PositionComponent {
       ),
     );
 
-    // Add edge pieces
+
     if (centerWidth > 0) {
       await _addTiledHorizontal(
         image: top,
@@ -138,7 +138,7 @@ class NineSliceSprite extends PositionComponent {
       );
     }
 
-    // Add center piece
+
     if (centerWidth > 0 && centerHeight > 0) {
       await add(
         SpriteComponent(
@@ -164,7 +164,7 @@ class NineSliceSprite extends PositionComponent {
     }
   }
 
-  // Tile an image horizontally across a span, cropping the last tile if needed.
+
   Future<void> _addTiledHorizontal({
     required ui.Image image,
     required double startX,
@@ -177,7 +177,7 @@ class NineSliceSprite extends PositionComponent {
     double remaining = totalWidth;
     while (remaining > 0.0) {
       final drawW = remaining >= tileW ? tileW : remaining;
-      // Crop source for partial tile to avoid stretching pattern
+
       final double cropRatio = drawW / tileW;
       final sprite = cropRatio >= 0.999
           ? Sprite(image)
@@ -201,7 +201,7 @@ class NineSliceSprite extends PositionComponent {
     }
   }
 
-  // Tile an image vertically across a span, cropping the last tile if needed.
+
   Future<void> _addTiledVertical({
     required ui.Image image,
     required double x,
@@ -247,11 +247,11 @@ class QuizPanel extends PositionComponent
   bool _autoPlayed = false;
   bool _disabled = false;
 
-  // layout
+
   late final double _leftW;
   late final double _panelY;
   late final double _panelH;
-  // inner content area (between Top/Bottom borders with 15px padding)
+
   late final double _border;
   late final double _pad;
   late final double _innerTop;
@@ -323,34 +323,34 @@ class QuizPanel extends PositionComponent
 
   final w = size.x;
   final h = size.y;
-  final isSmallScreen = h < 700 || w < 420; // heuristic: phone small viewport
-  _panelH = h * (isSmallScreen ? 0.72 : panelHeightRatio); // give more vertical space on small
+  final isSmallScreen = h < 700 || w < 420;
+  _panelH = h * (isSmallScreen ? 0.72 : panelHeightRatio);
     _panelY = h - _panelH;
 
-    // backgrd - using 9-slice sprite
+
     await add(
       NineSliceSprite(
         assetPath: 'assets/9-Slice/',
-        sliceSize: 64.0, // border thickness of the 9-slice
+        sliceSize: 64.0,
         position: Vector2(0, _panelY),
         size: Vector2(w, _panelH),
         priority: priority,
       ),
     );
 
-    // define inner content area inside the panel
-  // Make border & padding relative so they don't eat too much space on small screens
+
+
   _border = isSmallScreen ? (_panelH * 0.08).clamp(36.0, 56.0) : 64.0;
   _pad = isSmallScreen ? (_panelH * 0.02).clamp(10.0, 18.0) : 15.0;
     _innerTop = _panelY + _border + _pad;
     _innerBottom = _panelY + _panelH - _border - _pad;
     _innerH = _innerBottom - _innerTop;
-    _innerSidePad = _border + _pad; // left/right padding inside panel
+    _innerSidePad = _border + _pad;
 
     _leftW = w * 0.5;
     final rightX = _leftW;
 
-    // LEFT column theo type
+
     final type = (question.type).toLowerCase();
     final hasImage = (question.image ?? '').trim().isNotEmpty;
     final hasSound = (question.sound ?? '').trim().isNotEmpty;
@@ -380,29 +380,29 @@ class QuizPanel extends PositionComponent
     }
     if (hasSound && !_autoPlayed) {
       _autoPlayed = true;
-      // delay 100–150ms cho UI mounted
+
       Future.delayed(const Duration(milliseconds: 120), () {
         _playSoundRaw((question.sound!).trim());
       });
     }
 
-    // RIGHT column
+
     final double gap = 8.0;
     final count = min(
       question.options.length,
       4,
-    ); // Fixed: Using dart:math's min
+    );
 
     final innerW =
         (size.x - _leftW) -
-        2 * _innerSidePad; // right column width inside right border
+        2 * _innerSidePad;
     final startX =
-        rightX + _innerSidePad; // right column start inside right border
+        rightX + _innerSidePad;
     double rowY = _innerTop;
-    // Fit height per row to the available inner space
+
     final fitRowH = (_innerH - gap * (count - 1)) / count;
     final desiredMinRowH = _panelH * (isSmallScreen ? 0.19 : 0.16);
-    // Use the larger of fit or desired min only if it still fits overall; otherwise fall back to fit to avoid overflow
+
     double rowH;
     final totalIfMin = desiredMinRowH * count + gap * (count - 1);
     if (totalIfMin <= _innerH) {
@@ -432,7 +432,7 @@ class QuizPanel extends PositionComponent
   }
 
   Future<void> _addCenteredText(String text) async {
-    // Scale font size more aggressively on small screens for readability
+
     final isSmallScreen = size.y < 700 || size.x < 420;
     final fontSize = isSmallScreen
         ? (_panelH * 0.035).clamp(16.0, 26.0)
@@ -497,7 +497,7 @@ class QuizPanel extends PositionComponent
 
   Future<void> _addImageSound({String? imageRaw, String? soundRaw}) async {
     final btnH = _panelH * 0.05;
-    // Ensure button width is reasonable, has padding, and stays within the left content area
+
     final double maxLeftContentW = _leftW - (_innerSidePad + _pad);
     final double baseW = _panelH * 0.22;
     const label = 'Phát âm';
@@ -508,7 +508,7 @@ class QuizPanel extends PositionComponent
     final tp = textPaint.toTextPainter(label);
     tp.layout();
     final double textW = tp.width;
-    final double horizPad = btnH * 0.6; // symmetric padding
+    final double horizPad = btnH * 0.6;
     final double minW = textW + horizPad;
     final double btnW = min(maxLeftContentW, max(100.0, max(baseW, minW)));
     final btnGapBottom = _panelH * 0.025;
@@ -571,7 +571,7 @@ class QuizPanel extends PositionComponent
   }
 
   Future<void> _addSoundButtonCentered(String raw) async {
-    // Ensure button width is reasonable, has padding, and within left content area
+
     final double maxLeftContentW = _leftW - (_innerSidePad + _pad);
     final double baseW = _panelH * 0.25;
     final btnH = _panelH * 0.06;
@@ -716,11 +716,11 @@ class _SmallButton extends PositionComponent with TapCallbacks {
       ..color = const ui.Color(0x33FFFFFF);
     canvas.drawRRect(r, border);
 
-    // Slightly larger label for better readability on phones; ensure horizontal padding
-    double fontSize = (size.y * 0.6).clamp(15.0, 24.0);
-    final minPad = size.y * 0.4; // desired total horizontal padding (left+right)
 
-    // Measure text and shrink font if needed to maintain padding
+    double fontSize = (size.y * 0.6).clamp(15.0, 24.0);
+    final minPad = size.y * 0.4;
+
+
     TextPaint meas = TextPaint(
       style: TextStyle(
         color: ui.Color(0xFFF8FAFC),
@@ -796,24 +796,24 @@ class _AnswerItem extends PositionComponent with TapCallbacks {
     final fill = ui.Paint()
       ..color = _down ? const ui.Color(0xFF2A3647) : const ui.Color(0xFF233042);
     canvas.drawRRect(rrect, fill);
-    // Border paint (pure stroke; text rendering handled separately below)
+
     final border = ui.Paint()
       ..style = ui.PaintingStyle.stroke
       ..strokeWidth = 1
       ..color = const ui.Color(0x33FFFFFF);
     canvas.drawRRect(rrect, border);
 
-    // Scale font based on button height
-  // Use screenHeight so font doesn't shrink excessively when row height reduces
-  final baseFactor = isSmall ? 0.035 : 0.032; // slightly larger on small screens
+
+
+  final baseFactor = isSmall ? 0.035 : 0.032;
   double fontSize = (screenHeight * baseFactor);
-  // Still respect button height so it doesn't overflow vertically
+
   fontSize = fontSize.clamp(16.0, (size.y * 0.42).clamp(20.0, 34.0));
     final tp = TextPaint(
       style: TextStyle(color: ui.Color(0xFFE2E8F0), fontSize: fontSize),
     );
-    
-    // Scale left padding proportionally
+
+
     final leftPad = size.x * 0.03;
     tp.render(
       canvas,

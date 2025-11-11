@@ -20,7 +20,7 @@ Flashcard? mapRowToFlashcard(Map<String, Object?> row, int deckId) {
       final imagePath = imgRegex.firstMatch(fields[5])?.group(1);
       final synonymsPath = imgRegex.firstMatch(fields[6])?.group(1);
       final ipaMatch = ipaRegex.firstMatch(fields[1])?.group(0);
-      //un use
+
 
       final word = fields[0].replaceAll(tagRegex, '');
       if (fields.length == 7) {
@@ -41,7 +41,7 @@ Flashcard? mapRowToFlashcard(Map<String, Object?> row, int deckId) {
         );
         return newCard;
       }
-      // Basic
+
       break;
     case 1434531251879:
       final imagePath = imgRegex.firstMatch(fields[1])?.group(1);
@@ -67,7 +67,7 @@ Flashcard? mapRowToFlashcard(Map<String, Object?> row, int deckId) {
       }
       break;
     case 3:
-      
+
       break;
     default:
       print(

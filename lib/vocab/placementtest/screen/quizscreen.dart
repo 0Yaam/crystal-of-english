@@ -31,7 +31,7 @@ class _QuizScreenState extends State<QuizScreen> {
     "⚡ Don't give up now!",
     "🌟 Believe in yourself!",
   ];
-  String currentQuote = ""; 
+  String currentQuote = "";
 
   late PageController _pageController;
   void _selectAnswer(int index) {
@@ -47,10 +47,10 @@ class _QuizScreenState extends State<QuizScreen> {
     }
     setState(() {
       currentQuote = quotes[Random().nextInt(quotes.length)];
-      showQuote = true; // hiện quote khi chọn
+      showQuote = true;
     });
 
-    // 1s sau hide quote và next question
+
     Future.delayed(const Duration(milliseconds: 800), () {
       setState(() => showQuote = false);
 
@@ -83,7 +83,7 @@ class _QuizScreenState extends State<QuizScreen> {
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          color: Colors.teal, // màu teal cho icon
+          color: Colors.teal,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -93,7 +93,7 @@ class _QuizScreenState extends State<QuizScreen> {
         children: [
           PageView.builder(
             controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(), // disable swipe
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.questions.length,
             itemBuilder: (context, index) {
               final q = widget.questions[index];
@@ -107,7 +107,7 @@ class _QuizScreenState extends State<QuizScreen> {
               );
             },
           ),
-          // overlay quote
+
           if (showQuote)
             Center(
               child: AnimatedOpacity(

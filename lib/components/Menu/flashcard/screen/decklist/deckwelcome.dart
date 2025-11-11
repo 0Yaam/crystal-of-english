@@ -212,11 +212,11 @@ class _CreateNewDeckState extends State<CreateNewDeck> {
               child: TextField(
                 controller: deckController,
                 decoration: InputDecoration(labelText: "new deck name"),
-                onSubmitted: (_) => _createDeck(context, value), 
+                onSubmitted: (_) => _createDeck(context, value),
               ),
             ),
             ElevatedButton(
-              onPressed: () => _createDeck(context, value), 
+              onPressed: () => _createDeck(context, value),
               child: Text('them deck'),
             ),
           ],

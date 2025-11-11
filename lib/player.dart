@@ -5,96 +5,96 @@ import 'package:flame/collisions.dart';
 import 'main.dart';
 import 'components/collisionmap.dart';
 
-/// Player character that responds to joystick input and animates using a sprite sheet.
-///
-/// ANIMATION SYSTEM:
-/// - Uses a single sprite sheet (player.png) with a grid layout
-/// - Sheet has 3 rows (0=left/right, 1=down, 2=up) and 8 columns per row
-/// - Each frame is 80x80 pixels
-/// - Animates by cycling through columns in the current row
-/// - Frame timing controlled by stepTime (0.12 seconds per frame)
-///
-/// MOVEMENT SYSTEM:
-/// - Responds to joystick input for 4-directional movement
-/// - Speed is 150 pixels per second
-/// - Changes animation row based on movement direction
-/// - Flips sprite horizontally for left/right movement
-///
-/// COLLISION SYSTEM:
-/// - Has a small collision hitbox (6x6 pixels) offset from center
-/// - Prevents movement when colliding with obstacles
-/// - Uses collision cooldown to prevent getting stuck
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Player extends SpriteComponent
     with HasGameRef<MyGame>, CollisionCallbacks {
   JoystickComponent? joystick;
 
-  // Movement constants
-  static const double speed = 150; // pixels per second
-  static const double stepTime = 0.12; // seconds per animation frame
-  static const double dtCap = 1 / 60; // cap delta time to prevent large jumps
-  static const double collisionCooldownMs = .15; // prevent collision spam
 
-  // Sprite sheet dimensions
-  final Vector2 frameSize = Vector2(80, 80); // each frame is 80x80
-  static const int framesPerRow = 8; // 8 frames per row in the sheet
+  static const double speed = 150;
+  static const double stepTime = 0.12;
+  static const double dtCap = 1 / 60;
+  static const double collisionCooldownMs = .15;
 
-  // Sprite sheet and animation state
-  late Image spriteSheet; // loaded sprite sheet image
-  double frameTime = 0; // accumulator for frame timing
-  int currentFrame = 0; // current column (0-7)
-  int currentRow = 1; // current row (0=side, 1=down, 2=up)
-  int _lastFrame = -1; // previous frame for change detection
-  int _lastRow = -1; // previous row for change detection
-  bool facingLeft = false; // sprite flip state
-  bool _lastFacingLeft = false; // previous flip state for change detection
 
-  // Collision state
-  bool collided = false; // currently colliding with something
+  final Vector2 frameSize = Vector2(80, 80);
+  static const int framesPerRow = 8;
+
+
+  late Image spriteSheet;
+  double frameTime = 0;
+  int currentFrame = 0;
+  int currentRow = 1;
+  int _lastFrame = -1;
+  int _lastRow = -1;
+  bool facingLeft = false;
+  bool _lastFacingLeft = false;
+
+
+  bool collided = false;
   JoystickDirection collisionDirection =
-      JoystickDirection.idle; // direction blocked by collision
-  double _collisionCooldown = 0; // timer to prevent collision spam
+      JoystickDirection.idle;
+  double _collisionCooldown = 0;
 
-  // 2D array of sprites: [row][column] for efficient frame lookup
+
   late final List<List<Sprite>> _frames;
 
   Player({required Vector2 position})
-    : super(position: position + Vector2(0, 16), // shift spawn downward
+    : super(position: position + Vector2(0, 16),
             size: Vector2.all(80), anchor: Anchor.center);
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // Load the sprite sheet image
+
     spriteSheet = await gameRef.images.load('player.png');
 
-    // Helper function to create a sprite from the sheet at given row/column
+
     Sprite buildSprite(int row, int col) => Sprite(
       spriteSheet,
       srcPosition: Vector2(
         col * frameSize.x,
         row * frameSize.y,
-      ), // top-left corner of frame
-      srcSize: frameSize, // size of the frame to extract
+      ),
+      srcSize: frameSize,
     );
 
-    // Build 2D array of sprites: 3 rows × 8 columns
+
     _frames = List.generate(
-      3, // rows: 0=side, 1=down, 2=up
+      3,
       (r) => List.generate(framesPerRow, (c) => buildSprite(r, c)),
     );
 
-    // Initialize starting state
-    currentRow = 1; // start facing down
-    currentFrame = 0; // first frame
-    sprite = _frames[currentRow][currentFrame]; // set initial sprite
-    _lastRow = currentRow; // track for change detection
+
+    currentRow = 1;
+    currentFrame = 0;
+    sprite = _frames[currentRow][currentFrame];
+    _lastRow = currentRow;
     _lastFrame = currentFrame;
 
-    // Add collision hitbox (smaller than visual sprite)
+
     final hb = RectangleHitbox(size: Vector2(6, 6), position: Vector2(37, 37))
       ..collisionType = CollisionType.active;
     if (kDebugMode) {
-      hb.debugMode = true; // show hitbox in debug mode
+      hb.debugMode = true;
     }
     add(hb);
   }
@@ -102,27 +102,27 @@ class Player extends SpriteComponent
   @override
   void update(double dt) {
     super.update(dt);
-    if (joystick == null) return; // no input, no movement
+    if (joystick == null) return;
 
-    // Cap delta time to prevent large jumps when game lags
+    // Giới hạn dt để khỏi teleport khi máy lag.
     final d = dt > dtCap ? dtCap : dt;
 
-    // Update collision cooldown timer
+    // Cooldown ngắn để tránh bị đẩy bật lại liên tục.
     if (_collisionCooldown > 0) {
       _collisionCooldown -= d;
       if (_collisionCooldown < 0) _collisionCooldown = 0;
     }
 
-    Vector2 velocity = Vector2.zero(); // movement vector
-    final dir = joystick!.direction; // get joystick input direction
+    Vector2 velocity = Vector2.zero();
+    final dir = joystick!.direction;
 
-    // Check which directions are being pressed
+
     final moveLeft = dir == JoystickDirection.left;
     final moveRight = dir == JoystickDirection.right;
     final moveUp = dir == JoystickDirection.up;
     final moveDown = dir == JoystickDirection.down;
 
-    // Check if movement is blocked by collision in each direction
+    // Vừa đụng hướng nào thì khóa tạm thời hướng đó.
     bool lockLeft =
         (collided && collisionDirection == JoystickDirection.left) ||
         (_collisionCooldown > 0 &&
@@ -139,71 +139,74 @@ class Player extends SpriteComponent
         (_collisionCooldown > 0 &&
             collisionDirection == JoystickDirection.down);
 
-    // Process movement input and set animation row
+
     if (dir != JoystickDirection.idle) {
       if (moveLeft && !lockLeft) {
-        velocity.x = -speed; // move left
-        currentRow = 0; // use side animation row
-        facingLeft = true; // flip sprite
+        velocity.x = -speed;
+        currentRow = 0;
+        facingLeft = true;
       } else if (moveRight && !lockRight) {
-        velocity.x = speed; // move right
-        currentRow = 0; // use side animation row
-        facingLeft = false; // don't flip sprite
+        velocity.x = speed;
+        currentRow = 0;
+        facingLeft = false;
       } else if (moveUp && !lockUp) {
-        velocity.y = -speed; // move up
-        currentRow = 2; // use up animation row
+        velocity.y = -speed;
+        currentRow = 2;
       } else if (moveDown && !lockDown) {
-        velocity.y = speed; // move down
-        currentRow = 1; // use down animation row
+        velocity.y = speed;
+        currentRow = 1;
       }
     }
 
-    // Apply movement and animate if moving
+
     if (!velocity.isZero()) {
-      position += velocity * d; // update position
-      // Slight downward bias to keep character visually lower if near top
+      // Có input hợp lệ thì vừa di chuyển vừa chạy animation.
+      position += velocity * d;
+
       if (position.y < 40) {
-        position.y = 40; // prevent too high visual placement
+        position.y = 40;
       }
 
-      // Advance animation frame timing
+
       frameTime += d;
       if (frameTime > stepTime) {
-        frameTime = 0; // reset timer
+        frameTime = 0;
         currentFrame =
-            (currentFrame + 1) % framesPerRow; // cycle through frames
+            (currentFrame + 1) % framesPerRow;
       }
     }
 
-    // Update sprite if animation state changed
+
     if (currentRow != _lastRow || currentFrame != _lastFrame) {
-      sprite = _frames[currentRow][currentFrame]; // set new sprite
+      // Tránh set sprite lại khi frame chưa đổi.
+      sprite = _frames[currentRow][currentFrame];
       _lastRow = currentRow;
       _lastFrame = currentFrame;
     }
 
-    // Flip sprite horizontally if facing direction changed
+
     if (facingLeft != _lastFacingLeft) {
-      scale.x = facingLeft ? -1 : 1; // flip horizontally
+      // Lật sprite để ánh mắt nhìn đúng hướng.
+      scale.x = facingLeft ? -1 : 1;
       _lastFacingLeft = facingLeft;
     }
 
-    // Keep player within map bounds
+
+    // Chặn nhân vật khỏi việc bước ra ngoài map.
     position.x = position.x.clamp(0, gameRef.mapBounds.width - size.x);
-  // Keep a floor margin and a top margin so sprite doesn't sit too high visually
-  position.y = position.y.clamp(32, gameRef.mapBounds.height - size.y - 8);
+    position.y = position.y.clamp(32, gameRef.mapBounds.height - size.y - 8);
   }
 
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     super.onCollisionStart(points, other);
     if (other is HitboxComponent) {
-      // Get the current movement direction when collision occurs
+
       final dir = joystick?.direction ?? JoystickDirection.idle;
       if (dir != JoystickDirection.idle) {
-        collisionDirection = dir; // remember which direction is blocked
-        collided = true; // mark as colliding
-        _collisionCooldown = collisionCooldownMs; // start cooldown timer
+        collisionDirection = dir;
+        collided = true;
+        _collisionCooldown = collisionCooldownMs;
       }
     }
   }
@@ -212,9 +215,9 @@ class Player extends SpriteComponent
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
     if (other is HitboxComponent) {
-      collided = false; // no longer colliding
+      collided = false;
       if (_collisionCooldown == 0) {
-        collisionDirection = JoystickDirection.idle; // clear blocked direction
+        collisionDirection = JoystickDirection.idle;
       }
     }
   }

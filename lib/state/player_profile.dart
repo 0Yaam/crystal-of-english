@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:mygame/components/Menu/flashcard/data/database_helper.dart';
 
-/// PlayerProfile: DB-backed profile with simple autosave (slot-based).
-///
-/// Contract (simple):
-/// - Fields saved: proficiency, preferred_deck, map_file, pos_x, pos_y, hearts, xp, gold, inventory, extra
-/// - Default slot used for autosave: 1 (single-slot autosave). UI exposes slots.
+
+
+
+
+
 class PlayerProfile {
   int? _proficiencyLevel;
   int? _preferredDeckLevel;
@@ -23,7 +23,7 @@ class PlayerProfile {
 
   PlayerProfile._();
 
-  /// Initialize by loading autosave slot (slot 1) if present.
+
   Future<void> init() async {
     try {
       final row = await DatabaseHelper.instance.loadPlayerProfileSlot(_autosaveSlot);
@@ -39,7 +39,7 @@ class PlayerProfile {
         _inventoryJson = row['inventory'] as String?;
       }
     } catch (e) {
-      // Best-effort: don't crash initialization if DB missing
+
       debugPrint('PlayerProfile.init load failed: $e');
     }
   }
@@ -63,7 +63,7 @@ class PlayerProfile {
     if (autosave) await _autosave();
   }
 
-  /// Explicit save API: write current profile snapshot into the given slot.
+
   Future<void> saveToSlot(int slot) async {
     await DatabaseHelper.instance.savePlayerProfileSlot(
       slot,
@@ -94,7 +94,7 @@ class PlayerProfile {
     _inventoryJson = row['inventory'] as String?;
   }
 
-  /// Save a snapshot coming from the game (useful for autosave hooks).
+
   Future<void> saveSnapshot({
     String? mapFile,
     double? posX,
@@ -136,8 +136,8 @@ class PlayerProfile {
     }
   }
 
-  /// Returns effective level to use for difficulty decisions.
-  /// Priority: preferredDeckLevel (if set) -> proficiencyLevel -> default 1
+
+
   int effectiveLevel() {
     return _preferredDeckLevel ?? _proficiencyLevel ?? 1;
   }

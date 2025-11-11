@@ -1,16 +1,16 @@
-// lib/components/switchmap.dart
-import 'dart:ui' as ui; // Paint, Color, Rect, Canvas, PaintingStyle
+
+import 'dart:ui' as ui;
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import '../main.dart';
 
-/// Vùng “cổng” để chuyển sang map khác.
-/// Khi Player chạm vùng này, gọi MyGame.loadMap(targetMap, spawn: ...)
+
+
 class SwitchMap extends PositionComponent with HasGameRef<MyGame> {
-  final String targetMap;          // tên file .tmx, vd: 'houseinterior.tmx'
-  final Vector2 spawn;             // toạ độ spawn trong map mới (px)
-  final bool oneShot;              // true: dùng 1 lần rồi tự xoá
-  final bool debug;                // vẽ khung debug
+  final String targetMap;
+  final Vector2 spawn;
+  final bool oneShot;
+  final bool debug;
 
   SwitchMap({
     required Vector2 position,
@@ -32,7 +32,7 @@ class SwitchMap extends PositionComponent with HasGameRef<MyGame> {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // Hitbox để Flame quản lý va chạm (nếu cần). Ở đây ta vẫn dùng AABB thủ công.
+
     _hitbox = RectangleHitbox(size: size, position: Vector2.zero())
       ..collisionType = CollisionType.passive;
     add(_hitbox);
@@ -45,9 +45,9 @@ class SwitchMap extends PositionComponent with HasGameRef<MyGame> {
     super.update(dt);
     final p = gameRef.player;
 
-    // AABB overlap (vì SwitchMap neo topLeft)
+
     final r1 = ui.Rect.fromLTWH(position.x, position.y, size.x, size.y);
-    final r2 = ui.Rect.fromLTWH(p.position.x - p.size.x / 2, // Player anchor.center
+    final r2 = ui.Rect.fromLTWH(p.position.x - p.size.x / 2,
         p.position.y - p.size.y / 2, p.size.x, p.size.y);
 
     if (r1.overlaps(r2)) {
@@ -73,7 +73,7 @@ class SwitchMap extends PositionComponent with HasGameRef<MyGame> {
       ..style = ui.PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
-    // vẽ khung vùng cổng
+
     canvas.drawRect(
       ui.Rect.fromLTWH(0, 0, size.x, size.y),
       paint,

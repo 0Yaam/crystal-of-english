@@ -34,7 +34,7 @@ class ProfileSreen extends StatefulWidget {
 }
 
 class _ProfileSreenState extends State<ProfileSreen> {
-  //final user = FirebaseAuth.instance.currentUser;
+
 
   int currentPageIndex = 0;
 

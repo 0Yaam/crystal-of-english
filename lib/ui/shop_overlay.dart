@@ -27,7 +27,7 @@ class _ShopOverlayState extends State<ShopOverlay> {
   late List<GameItem> npcItems;
   bool _loading = true;
 
-  // Adjustable positions for the foreground images
+
   static const Offset kEleonoreOffset = Offset(80, 0);
   static const Offset kBookOffset = Offset(-100, 0);
 

@@ -64,7 +64,7 @@ class DatabaseHelper {
       debugPrint('Runtime schema reconciliation failed: $e');
     }
 
-    // attempt to migrate legacy `due_date` string values into integer `due` (ms since epoch)
+
     try {
       await migrateDueDateStrings(db);
     } catch (e) {
@@ -74,15 +74,15 @@ class DatabaseHelper {
     return db;
   }
 
-  /// Migrate any legacy `due_date` string columns (ISO 8601) into the integer
-  /// `due` column (milliseconds since epoch). This is tolerant: if `due` is
-  /// already present we skip. We read all rows and update as needed.
+
+
+
   Future<void> migrateDueDateStrings(Database db) async {
     try {
-      // read all cards; if column `due_date` exists and `due` is null, parse and write
+
       final rows = await db.rawQuery('SELECT rowid, * FROM cards');
       for (final row in rows) {
-        // row is Map<String, Object?>; check for 'due' and 'due_date'
+
         final dueVal = row['due'];
         final dueDateVal = row['due_date'];
         if ((dueVal == null || dueVal == 0) && dueDateVal != null) {
@@ -160,7 +160,7 @@ class DatabaseHelper {
       )
 ''');
 
-    // player_profile table: supports multiple save slots (slot is unique)
+
     await db.execute('''
       create table player_profile(
         id integer primary key autoincrement,
@@ -198,7 +198,7 @@ class DatabaseHelper {
     });
   }
 
-  
+
   Future<void> deleteDeck(int id) async {
     final db = await database;
     await db.delete('decks', where: 'id=?', whereArgs: [id]);
@@ -482,7 +482,7 @@ class DatabaseHelper {
     }
   }
 
-  // --- Player profile save/load helpers ---
+
   Future<void> savePlayerProfileSlot(
     int slot, {
     int? proficiency,

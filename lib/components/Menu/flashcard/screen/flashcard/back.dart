@@ -42,21 +42,21 @@ class BackSideState extends State<BackSide> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            // if (widget.card.img != null)
-            //   Container(
-            //     height: 200,
-            //     margin: const EdgeInsets.only(right: 12),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //     child: ClipRRect(
-            //       borderRadius: BorderRadius.circular(8),
-            //       child: Image.file(
-            //         File('$dir/${widget.card.img}'),
-            //         fit: BoxFit.fitHeight,
-            //       ),
-            //     ),
-            //   ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             Row(
               children: [
                 if (widget.card.img != null)
@@ -69,8 +69,8 @@ class BackSideState extends State<BackSide> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.file(
-                        height: 150, // height in pixels
-                        fit:BoxFit.cover, // optional, how the image fits inside
+                        height: 150,
+                        fit:BoxFit.cover,
                         File('$dir/${widget.card.img}'),
                       ),
                     ),
@@ -79,7 +79,7 @@ class BackSideState extends State<BackSide> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Word + IPA
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -110,7 +110,7 @@ class BackSideState extends State<BackSide> {
                       ),
                       const SizedBox(height: 4),
 
-                      // Meaning
+
                       if (widget.card.meaning != null)
                         Text.rich(
                           TextSpan(
@@ -153,7 +153,7 @@ class BackSideState extends State<BackSide> {
                     ],
                   ),
                 ),
-                // Optional: sound button
+
                 Column(
                   children: [
                     if (widget.card.sound != null)
@@ -192,9 +192,9 @@ class BackSideState extends State<BackSide> {
                           IconButton(
                             icon: const Icon(Icons.volume_up),
                             onPressed: () async {
-                              // await audio.play(
-                              //   DeviceFileSource('$dir/${card.defSound}'),
-                              // );
+
+
+
                             },
                           ),
                           Text("defsound"),
@@ -204,22 +204,22 @@ class BackSideState extends State<BackSide> {
                 ),
               ],
             ),
-            // if (widget.card.synonyms != null)
-            //   Container(
-            //     height: 50,
-            //     margin: const EdgeInsets.only(right: 12),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //     child: ClipRRect(
-            //       // Bọc trong ClipRRect để làm tròn góc ảnh
-            //       borderRadius: BorderRadius.circular(8),
-            //       child: Image.file(
-            //         File('$dir/${widget.card.synonyms}'),
-            //         fit: BoxFit.fitHeight, // Đảm bảo hình ảnh vừa với chiều rộng
-            //       ),
-            //     ),
-            //   ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           ],
         ),
       ),

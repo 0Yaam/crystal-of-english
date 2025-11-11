@@ -17,7 +17,7 @@ class EndScreen extends StatelessWidget {
     double percent = (score / total);
     int percentInt = (percent * 100).toInt();
 
-    // Mapping % → IELTS band & tip
+
     String band;
     String tip;
     Color gradeColor;
@@ -39,7 +39,7 @@ class EndScreen extends StatelessWidget {
       gradeColor = Colors.redAccent;
     }
 
-    // Example skill analysis
+
     final Map<String, String> skillAnalysis = {
       "Listening": percent >= 0.7 ? "Strong" : "Weak",
       "Reading": percent >= 0.5 ? "Average" : "Weak",
@@ -55,7 +55,7 @@ class EndScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Left side: main info
+
             Expanded(
               flex: 5,
               child: Column(
@@ -99,13 +99,13 @@ class EndScreen extends StatelessWidget {
 
             const SizedBox(width: 40),
 
-            // Right side: progress + skills
+
             Expanded(
               flex: 4,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Progress bar
+
                   Text(
                     'Progress',
                     style: TextStyle(
@@ -125,7 +125,7 @@ class EndScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Skills
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: skillAnalysis.entries.map((entry) {
@@ -158,8 +158,8 @@ class EndScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(context); // EndScreen → QuizScreen
-                      Navigator.pop(context); // QuizScreen → CardLevelScreen
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: const Text(
                       'Back to Levels',

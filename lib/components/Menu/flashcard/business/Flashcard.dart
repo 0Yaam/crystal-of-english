@@ -9,7 +9,7 @@ class Flashcard {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  //fields related fields
+
   final String? word;
   final String? meaning;
   final String? img;
@@ -21,7 +21,7 @@ class Flashcard {
   final String? ipa;
   final int? complexity;
 
-  //review related fields
+
   final int? interval;
   final int? reps;
   final DateTime? due;
@@ -180,23 +180,23 @@ class Cardmodel with ChangeNotifier {
         .toList(growable: false);
   }
 
- 
 
-  // Update card scheduling after a review. Accepts either a raw SM-2 quality (0..5)
-  // or legacy 1..3 performanceRating values. If `quality` is in 0..5 it is
-  // used directly, otherwise it's mapped from performanceRating to quality.
+
+
+
+
   Flashcard? _lastOldForUndo;
 
   Future<void> undoLastReview() async {
     if (_lastOldForUndo == null) return;
-    // restore DB
+
     await _dbhelper.updateCard(_lastOldForUndo!);
     final idx = _cards.indexWhere((c) => c.id == _lastOldForUndo!.id);
     if (idx != -1) {
       _cards[idx] = _lastOldForUndo!;
     }
     _lastOldForUndo = null;
-    
+
     notifyListeners();
   }
 
@@ -204,12 +204,12 @@ class Cardmodel with ChangeNotifier {
     Flashcard card,
     int qualityOrLegacy,
   ) async {
-    // Determine quality (SM-2 uses 0..5)
+
     int q;
     if (qualityOrLegacy >= 0 && qualityOrLegacy <= 5) {
       q = qualityOrLegacy;
     } else {
-      // backward compatibility: map legacy 1..3 into quality
+
       if (qualityOrLegacy >= 3) {
         q = 5;
       } else if (qualityOrLegacy == 2) {
@@ -247,7 +247,7 @@ class Cardmodel with ChangeNotifier {
       easeFactor: schedule.easeFactor,
     );
 
-    // Save old state for undo
+
     final oldIndex = _cards.indexWhere((c) => c.id == card.id);
     if (oldIndex != -1) {
       _lastOldForUndo = _cards[oldIndex];
@@ -255,11 +255,11 @@ class Cardmodel with ChangeNotifier {
       _lastOldForUndo = null;
     }
 
-    
+
 
     await _dbhelper.updateCard(updated);
 
-    // update in-memory list
+
     final index = _cards.indexWhere((c) => c.id == updated.id);
     if (index != -1) {
       final old = _cards[index];
@@ -292,4 +292,4 @@ class Cardmodel with ChangeNotifier {
     final String? result= await _dbhelper.getMediaFile(deckId);
     return result;
   }
-}       
+}

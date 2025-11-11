@@ -31,11 +31,11 @@ class Health extends PositionComponent {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    //load sprites
+
     _fullSprite = await Sprite.load(fullHeartAsset);
     _emptySprite = await Sprite.load(emptyHeartAsset);
 
-    // tạo icon rỗng 
+
     for (var i = 0; i < maxHearts; i++) {
       final icon = SpriteComponent(
         sprite: _emptySprite,
@@ -53,7 +53,7 @@ class Health extends PositionComponent {
     _refreshVisual();
   }
 
-  //api
+
   void setCurrent(int value) {
     _currentHearts = value.clamp(0, maxHearts);
     _refreshVisual();

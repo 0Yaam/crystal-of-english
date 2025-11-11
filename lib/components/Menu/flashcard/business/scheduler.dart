@@ -6,8 +6,8 @@ class NextSchedule {
   NextSchedule(this.intervalDays, this.reps, this.easeFactor);
 }
 
-/// Compute next scheduling using a simplified SM-2 algorithm.
-/// quality: 0..5
+
+
 NextSchedule computeSM2({
   required int quality,
   int prevInterval = 0,
@@ -21,7 +21,7 @@ NextSchedule computeSM2({
   if (quality < 3) {
     reps = 0;
     intervalDays = 1;
-    // EF unchanged on failure in this simple variant
+
   } else {
     reps = prevReps + 1;
     if (reps == 1) {

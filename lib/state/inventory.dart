@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class GameItem {
   final String name;
   final String imageAssetPath;
-  final int price; // gold price for shop
+  final int price;
 
   const GameItem(this.name, this.imageAssetPath, {this.price = 0});
 }

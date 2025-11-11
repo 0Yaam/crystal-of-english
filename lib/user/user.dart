@@ -105,10 +105,10 @@ class UserDatabase {
   Future<User> getUser(int id) async {
     final db = await instance.database;
 
-    // Query theo ID
+
     final result = await db.query('users', where: 'id = ?', whereArgs: [id]);
 
-    // Nếu có kết quả thì trả về dòng đầu tiên, không thì trả null
+
     if (result.isNotEmpty) {
       return User.fromMap(result.first);
     } else {
@@ -136,10 +136,10 @@ class UserDatabase {
     final db = await instance.database;
     final now = DateTime.now();
 
-    // Lấy user (chỉ có 1)
-    final user = await getUser(1); // trả về User object
 
-    // Kiểm tra lastLoginDate
+    final user = await getUser(1);
+
+
     final lastLogin = user.lastLoginDate;
     int newStreak = user.streak;
 
@@ -147,21 +147,21 @@ class UserDatabase {
       final difference = now.difference(lastLogin).inDays;
 
       if (difference == 0) {
-        // Cùng ngày -> không tăng
+
         return;
       } else if (difference == 1) {
-        // Liền kề -> tăng streak
+
         newStreak += 1;
       } else {
-        // Ngày gián đoạn -> reset streak
+
         newStreak = 1;
       }
     } else {
-      // Chưa có lastLoginDate -> set streak = 1
+
       newStreak = 1;
     }
 
-    // Cập nhật lại user
+
     final updatedUser = User(
       id: user.id,
       name: user.name,

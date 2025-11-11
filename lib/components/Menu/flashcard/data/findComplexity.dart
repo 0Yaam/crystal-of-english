@@ -40,7 +40,7 @@ int countSyllables(String word) {
     }
   }
 
-  // Ensure at least one syllable
+
   return count > 0 ? count : 1;
 }
 

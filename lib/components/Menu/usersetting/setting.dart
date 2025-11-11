@@ -28,11 +28,11 @@ class _UserScreenState extends State<UserScreen> {
 
   void _updateUserStreak() async {
     await UserDatabase.instance.updateStreak();
-    _refresh(); // reload UI
+    _refresh();
   }
   void _updateUserGoal(int newGoal) async {
     await UserDatabase.instance.UpdateGoal(newGoal);
-    _refresh(); // reload UI
+    _refresh();
   }
 
   @override
@@ -76,7 +76,7 @@ class _UserScreenState extends State<UserScreen> {
                         children: [
                           UserText(
                             text: 'Name :${user.name}',
-                            textColor: Colors.tealAccent, // teal
+                            textColor: Colors.tealAccent,
                           ),
                           SizedBox(height: 20),
                           UserText(
@@ -85,12 +85,12 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                           UserText(
                             text: '🔥 Streak: ${user.streak}',
-                            textColor: Colors.redAccent, // red
+                            textColor: Colors.redAccent,
                           ),
                           UserText(
                             text:
                                 'Last Login: ${user.lastLoginDate.toString().split(' ')[0]}',
-                            textColor: Colors.orangeAccent, // orange
+                            textColor: Colors.orangeAccent,
                           ),
                         ],
                       ),
@@ -109,7 +109,7 @@ class _UserScreenState extends State<UserScreen> {
                         children: [
                           UserText(
                             text: 'Time In Game Goal:',
-                            textColor: Colors.yellowAccent, // yellow
+                            textColor: Colors.yellowAccent,
                           ),
                           SizedBox(
                             height: 85,

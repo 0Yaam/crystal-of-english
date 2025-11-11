@@ -6,7 +6,7 @@ class AudioManager {
 
   bool _bgmEnabled = true;
   bool _sfxEnabled = true;
-  double _bgmVolume = 0.5; 
+  double _bgmVolume = 0.5;
   double _sfxVolume = 0.8;
   String? _currentBgm;
 
@@ -14,16 +14,16 @@ class AudioManager {
     await FlameAudio.bgm.initialize();
   }
 
-  // ===== BGM =====
-  // Note: BGM in FlameAudio loops by default; the `loop` flag is kept
-  // for API compatibility but is not used here.
+
+
+
   Future<void> playBgm(String asset, {double? volume, bool loop = true}) async {
     if (!_bgmEnabled) return;
     _currentBgm = asset;
     if (volume != null) {
       _bgmVolume = volume.clamp(0.0, 1.0).toDouble();
     }
-    await FlameAudio.bgm.stop();  
+    await FlameAudio.bgm.stop();
     await FlameAudio.bgm.play(asset, volume: _bgmVolume);
   }
 
@@ -46,7 +46,7 @@ class AudioManager {
     if (!enabled) {
       FlameAudio.bgm.pause();
     } else {
-      // track dang do thi resume
+
       FlameAudio.bgm.resume();
     }
   }
@@ -60,7 +60,7 @@ class AudioManager {
   bool get bgmEnabled => _bgmEnabled;
   double get bgmVolume => _bgmVolume;
 
-  // sfx
+
   Future<void> playSfx(String asset, {double? volume}) async {
     if (!_sfxEnabled) return;
     final vol = (volume ?? _sfxVolume).clamp(0.0, 1.0).toDouble();

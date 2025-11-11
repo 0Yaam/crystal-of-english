@@ -1,8 +1,8 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flutter/foundation.dart'; // For VoidCallback
+import 'package:flutter/foundation.dart';
 
-import '../main.dart';  
+import '../main.dart';
 
 class Coin extends SpriteAnimationComponent with TapCallbacks {
   final VoidCallback onCollected;
@@ -16,7 +16,7 @@ class Coin extends SpriteAnimationComponent with TapCallbacks {
   }) : super(
          position: position,
          size: Vector2(16, 16),
-         anchor: Anchor.center, 
+         anchor: Anchor.center,
        );
 
   @override
@@ -31,7 +31,7 @@ class Coin extends SpriteAnimationComponent with TapCallbacks {
       stepTime: 0.15,
       loop: true,
     );
-    priority = 10;  
+    priority = 10;
   }
 
   @override
@@ -41,13 +41,13 @@ class Coin extends SpriteAnimationComponent with TapCallbacks {
     final distance = position.distanceTo(game.player.center);
 
     if (distance <= interactRadius) {
-      onCollected(); 
+      onCollected();
       if (!persistent) {
         removeFromParent();
       }
-      return true;  
+      return true;
     }
 
-    return false;  
+    return false;
   }
 }

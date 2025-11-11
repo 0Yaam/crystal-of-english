@@ -43,13 +43,13 @@ class NavPauseMenu extends StatelessWidget {
         children: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.zero, // bỏ padding mặc định
-              backgroundColor: Colors.transparent, // nền trong suốt
+              padding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
             ),
             onPressed: () {
               game.resumeEngine();
-              game.overlays.remove('PauseMenu'); // tắt menu
+              game.overlays.remove('PauseMenu');
             },
             child: SizedBox(
               height: btnSize,
@@ -58,14 +58,14 @@ class NavPauseMenu extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.zero, // bỏ padding mặc định
-              backgroundColor: Colors.transparent, // nền trong suốt
+              padding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
             ),
             onPressed: () {
               game.resumeEngine();
               game.overlays.add('MainMenu');
-              game.overlays.remove('PauseMenu'); // tắt menu
+              game.overlays.remove('PauseMenu');
             },
             child: SizedBox(
               height: btnSize,
@@ -74,13 +74,13 @@ class NavPauseMenu extends StatelessWidget {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.zero, // bỏ padding mặc định
-              backgroundColor: Colors.transparent, // nền trong suốt
+              padding: EdgeInsets.zero,
+              backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
             ),
             onPressed: () {
               game.resumeEngine();
-              game.overlays.remove('PauseMenu'); // tắt menu
+              game.overlays.remove('PauseMenu');
             },
             child: SizedBox(
               height: btnSize,

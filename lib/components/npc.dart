@@ -1,4 +1,4 @@
-// lib/components/npc.dart
+
 import 'dart:math';
 import 'dart:ui' show Rect, Size;
 import 'package:flame/components.dart';
@@ -26,9 +26,9 @@ class NpcAnimConfig {
 }
 
 enum InteractOrderMode {
-  alwaysFromStart,    
-  rememberProgress,   
-  loop,               
+  alwaysFromStart,
+  rememberProgress,
+  loop,
 }
 
 class Npc extends SpriteComponent with HasGameRef<MyGame> {
@@ -49,9 +49,9 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
   final List<String> interactLines;
   int _interactIdx = 0;
   final InteractOrderMode interactOrderMode;
-  final String? interactPrompt;                 
-  final List<DialogueChoice> interactChoices;  
-  final Portrait? fixedRightPortrait;           
+  final String? interactPrompt;
+  final List<DialogueChoice> interactChoices;
+  final Portrait? fixedRightPortrait;
   bool enableIdleChatter;
   final List<String> idleLines;
   int _idleIdx = 0;
@@ -72,7 +72,7 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
     required Vector2 position,
     required this.manager,
 
-    // sprite/anim
+
     this.spriteAsset = 'player.png',
     Vector2? srcPosition,
     Vector2? srcSize,
@@ -87,16 +87,16 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
     this.rightAvatarSrcSize,
     this.rightAvatarDisplaySize = const Size(48, 48),
 
-    // interact tuyến tính
+
     required this.interactLines,
     this.interactOrderMode = InteractOrderMode.alwaysFromStart,
 
-    // interact menu (buttons bên phải)
+
     this.interactPrompt,
     this.interactChoices = const <DialogueChoice>[],
     this.fixedRightPortrait,
 
-    // idle chatter
+
     this.enableIdleChatter = true,
     required this.idleLines,
     this.idleSpeakEvery = 4,
@@ -105,11 +105,11 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
     this.idleTalkRadius = 160,
     this.idleBubbleOffsetY = 0,
 
-    // interact region
+
     this.interactRadius = 56,
     this.interactGapToCenter = 0,
 
-    // hiển thị
+
     Vector2? size,
   })  : srcPosition = srcPosition ?? Vector2(0, 0),
         srcSize = srcSize ?? Vector2(80, 80),
@@ -149,9 +149,10 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
       target: this,
       radius: interactRadius,
       gapToCenter: interactGapToCenter,
-      onPressed: _handleInteractPressed,  
+      onPressed: _handleInteractPressed,
     );
     parent?.add(_badge!);
+    // Hiện vòng tròn gợi ý tương tác quanh NPC.
     if (enableIdleChatter && idleLines.isNotEmpty) {
       final jitter = _rnd.nextDouble() * 1.5;
       _idleLoop = TimerComponent(
@@ -177,16 +178,18 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
     super.update(dt);
     if (_badge != null && !_badge!.isMounted && parent != null) {
       parent!.add(_badge!);
+      // Flame đôi khi remove component con, nên gắn lại khi cần.
     }
-    // Show a persistent small speech bubble with the interact prompt when
-    // the player is within interact radius. This gives a visible "Talk" cue.
+
+
     try {
       final p = gameRef.player;
       final dist = p.position.distanceTo(position);
       final near = dist <= interactRadius;
       if (!manager.isOpen && near && (interactChoices.isNotEmpty || (interactPrompt != null && interactPrompt!.isNotEmpty))) {
-        // Show a persistent interact prompt only once when player enters range.
+
         if (_bubble == null) {
+          // Hiện bong bóng nho nhỏ để nhắc người chơi tương tác.
           final label = (interactPrompt != null && interactPrompt!.trim().length <= 28)
               ? interactPrompt!
               : 'Nói chuyện';
@@ -203,8 +206,9 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
           }
         }
       } else if (!near) {
-        // If player moved away, remove the interaction prompt bubble.
+
         if (_bubble != null) {
+          // Đi xa rồi thì tắt bong bóng cho đỡ rối màn hình.
           _bubble!.removeFromParent();
           _bubble = null;
         }
@@ -266,7 +270,7 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
         for (int i = start; i < interactLines.length; i++) {
           script.add(DialogueLine(interactLines[i], speaker: leftPortrait));
         }
-        _interactIdx = interactLines.length;  
+        _interactIdx = interactLines.length;
         break;
 
       case InteractOrderMode.loop:
@@ -304,7 +308,7 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
         rightAvatarSrcSize!.x, rightAvatarSrcSize!.y,
       );
     }
-    return null;  
+    return null;
   }
   Future<void> _idleSpeakOnce() async {
     if (!enableIdleChatter) return;
@@ -312,6 +316,7 @@ class Npc extends SpriteComponent with HasGameRef<MyGame> {
     if (manager.isOpen) return;
 
     if (idleOnlyNearPlayer) {
+      // Nói chuyện phiếm chỉ khi người chơi đứng đủ gần.
       final p = gameRef.player;
       if (p.position.distanceTo(position) > idleTalkRadius) return;
     }

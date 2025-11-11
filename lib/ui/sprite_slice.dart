@@ -23,7 +23,7 @@ class SpriteSlice extends StatelessWidget {
           child: Image.asset(
             asset,
             gaplessPlayback: true,
-            filterQuality: FilterQuality.none, 
+            filterQuality: FilterQuality.none,
           ),
         ),
       ),

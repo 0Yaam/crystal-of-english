@@ -21,7 +21,7 @@ class EnemyWander extends SpriteComponent with HasGameRef<MyGame> {
   }) : super(size: Vector2(32, 32), anchor: Anchor.center, priority: 15);
 
   final _rng = Random();
-  Vector2? _target;
+  Vector2? _target; // NPC sẽ lượn tới điểm này rồi chọn điểm mới.
   bool _triggered = false;
 
   @override
@@ -42,6 +42,7 @@ class EnemyWander extends SpriteComponent with HasGameRef<MyGame> {
     if (_triggered) return;
 
     if (_target == null) {
+      // Không có mục tiêu thì random lại trong vùng tuần tra.
       _pickNewTarget();
     } else {
       final dir = (_target! - position);
@@ -57,6 +58,7 @@ class EnemyWander extends SpriteComponent with HasGameRef<MyGame> {
     final p = gameRef.player;
     final d = p.position.distanceTo(position);
     if (d <= triggerRadius) {
+      // Tới gần người chơi là mở giao chiến.
       _triggered = true;
       gameRef.enterBattle(enemyType: enemyType);
       removeFromParent();

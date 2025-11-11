@@ -4,7 +4,7 @@ import 'package:mygame/components/Menu/flashcard/screen/blankfill/blankwordscree
 import 'package:mygame/components/Menu/flashcard/screen/flashcard/newwayreview.dart';
 import 'package:mygame/components/Menu/flashcard/screen/mindfield/mindfeild.dart';
 import 'package:mygame/components/Menu/flashcard/screen/phonemix/phonemix.dart';
-// removed unused imports
+
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -61,12 +61,12 @@ class _CardListScreenState extends State<CardListScreen> {
   @override
   Widget build(BuildContext context) {
     final cardModel = Provider.of<Cardmodel>(context);
-    // If we have cards for this deck, compute average complexity and save as preferred deck level
+
     if (widget.deckId != null && cardModel.card.isNotEmpty) {
       final complexities = cardModel.card.map((c) => c.complexity ?? 1).toList();
       if (complexities.isNotEmpty) {
         final avg = (complexities.reduce((a, b) => a + b) / complexities.length).round();
-        // persist preferred deck level asynchronously to avoid side-effects in build
+
         Future.microtask(() => PlayerProfile.instance.setPreferredDeckLevel(avg));
       }
     }
@@ -220,7 +220,7 @@ class CardInformation extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Word + IPA
+
               const SizedBox(height: 4),
               TitleAndValue(title: "Meaning", value: card.meaning ?? ''),
               TitleAndValue(title: "Example", value: card.example ?? ''),
@@ -270,7 +270,7 @@ class CardInformation extends StatelessWidget {
 class PictureHolder extends StatelessWidget {
   final String? path;
   const PictureHolder({super.key, required this.path});
-  
+
   @override
   Widget build(BuildContext context) {
     if (path != null) {
@@ -282,7 +282,7 @@ class PictureHolder extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: Image.file(
             File(path!),
-            fit: BoxFit.fitWidth, 
+            fit: BoxFit.fitWidth,
           ),
         ),
       );
@@ -382,14 +382,14 @@ class Complexity extends StatelessWidget {
         0,
         168,
         6,
-      ); 
+      );
     } else if (complexity == 2) {
       return const Color.fromARGB(
         255,
         0,
         97,
         73,
-      ); 
+      );
     } else if (complexity == 3) {
       return const Color.fromARGB(
         255,
@@ -403,11 +403,11 @@ class Complexity extends StatelessWidget {
         141,
         3,
         106,
-      ); // Mức độ khó vừa (cam nhạt)
+      );
     } else if (complexity == 5) {
-      return const Color.fromARGB(255, 138, 3, 16); 
+      return const Color.fromARGB(255, 138, 3, 16);
     } else {
-      // Mặc định hoặc giá trị không xác định
+
       return Colors.grey[100]!;
     }
   }

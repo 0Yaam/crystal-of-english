@@ -1,4 +1,4 @@
-// Modular enemy animation map for alternative system
+
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -20,19 +20,19 @@ const _kHeroAttackPng = 'characters/maincharacter/Attack.png';
 const _kHeroDeadPng = 'characters/maincharacter/Dead.png';
 const _kHeroHurtPng = 'characters/maincharacter/Hurt.png';
 
-// Hero frame sizes
+
 final Vector2 _kHeroIdleFrameSize = Vector2(64, 64);
 final Vector2 _kHeroAttackFrameSize = Vector2(96, 80);
 final Vector2 _kHeroDeadFrameSize = Vector2(80, 64);
 final Vector2 _kHeroHurtFrameSize = Vector2(64, 64);
 
-// Hero animation frame counts (based on hero sprite sheets)
+
 const int _kIdleFrames = 4;
 const int _kAttackFrames = 8;
 const int _kDeadFrames = 8;
 const int _kHurtFrames = 4;
 
-// Animation timing (seconds per frame)
+
 const double _kIdleStep = 0.18;
 const double _kAttackStep = 0.07;
 const double _kDeadStep = 0.08;
@@ -125,7 +125,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
 
   BattleScene({required this.onEnd, required this.enemyType});
 
-  // thưởng XP theo quai
+
   int _xpRewardFor(EnemyType t) {
     switch (t) {
       case EnemyType.normal:
@@ -144,17 +144,17 @@ class BattleScene extends Component with HasGameReference<MyGame> {
   int _goldRewardFor(EnemyType t) {
     switch (t) {
       case EnemyType.normal:
-        return 3 + _rng.nextInt(6); // 3..8
+        return 3 + _rng.nextInt(6);
       case EnemyType.strong:
-        return 8 + _rng.nextInt(8); // 8..15
+        return 8 + _rng.nextInt(8);
       case EnemyType.miniboss:
-        return 15 + _rng.nextInt(16); // 15..30
+        return 15 + _rng.nextInt(16);
       case EnemyType.boss:
-        return 30 + _rng.nextInt(31); // 30..60
+        return 30 + _rng.nextInt(31);
     }
   }
 
-  // Hero animation
+
   late final PositionComponent heroRoot;
   late final SpriteAnimationComponent heroAnim;
   late SpriteAnimation _idleAnim;
@@ -173,7 +173,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
   late Map<String, SpriteAnimation> _enemyAnims;
 
   late PositionComponent enemy;
-  // Enemy animation sprites and helpers
+
   late SpriteAnimationComponent enemyAnim;
   late SpriteAnimation _enemyIdleAnim;
 
@@ -201,6 +201,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     final logicalBg = Vector2(320, 180);
     final screenSize = game.size;
     final scale = min(screenSize.x / logicalBg.x, screenSize.y / logicalBg.y);
+    // Scale nền theo tỉ lệ màn thật để khỏi méo hình.
 
     final bg = SpriteComponent(
       sprite: bgSprite,
@@ -232,7 +233,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
           ..position = Vector2(8, 4);
     await hud.add(heroHealth);
 
-    // Enemy health
+
     final enemyMaxHearts = switch (enemyType) {
       EnemyType.normal => 2,
       EnemyType.strong => 3,
@@ -268,6 +269,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     final panelTop = screenSize.y * (1.0 - QuizPanel.panelHeightRatio);
     final centerX = screenSize.x / 2;
   final baselineY = panelTop - (8 * battleScale);
+    // Mốc baseline giữ nhân vật và quiz panel không đè nhau.
     final double halfGap = baseGap * battleScale;
     final Vector2 actorSize = actorBaseSize * battleScale;
     final heroDisplaySize = actorSize;
@@ -297,8 +299,8 @@ class BattleScene extends Component with HasGameReference<MyGame> {
       anchor: Anchor.bottomCenter,
       position: Vector2(
         centerX - 70 * battleScale,
-        baselineY + 74, // lower hero a bit so both stand lower on screen
-      ), // Move hero higher by 2px
+        baselineY + 74,
+      ),
       priority: 10,
     );
 
@@ -313,7 +315,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await heroRoot.add(heroAnim);
     await hud.add(heroRoot);
 
-    // Load enemy battle animations based on enemy type
+
     final String enemyFolder = switch (enemyType) {
       EnemyType.normal => 'characters/enemy/at_battle/orc/',
       EnemyType.strong => 'characters/enemy/at_battle/plant/',
@@ -321,34 +323,35 @@ class BattleScene extends Component with HasGameReference<MyGame> {
       EnemyType.boss => 'characters/enemy/at_battle/vampire/',
     };
 
-    // Modular enemy animation system with configurable frame sizes
+
     Map<String, SpriteAnimation> enemyAnimations = {};
     try {
-      // Load sprite images (see attachments for actual images)
+      // Load bộ animation riêng cho từng loại quái.
+
       final ui.Image eIdle = await game.images.load(
         '${enemyFolder}idle.png',
-      ); // 4 frames, 64x64 each
+      );
       final ui.Image eAttack = await game.images.load(
         '${enemyFolder}attack.png',
-      ); // 6 frames, 64x64 each
+      );
       final ui.Image eHurt = await game.images.load(
         '${enemyFolder}hurt.png',
-      ); // 6 frames, 64x64 each
+      );
       final ui.Image eDeath = await game.images.load(
         '${enemyFolder}death.png',
-      ); // 8 frames, 64x64 each
+      );
 
-      // Frame sizes based on provided images
+
       const frameWidth = 64.0;
       const frameHeight = 64.0;
 
-      // Frame counts based on image widths
-      final idleFrameCount = (eIdle.width / frameWidth).floor(); // 4
-      final attackFrameCount = (eAttack.width / frameWidth).floor(); // 6
-      final hurtFrameCount = (eHurt.width / frameWidth).floor(); // 6
-      final deathFrameCount = (eDeath.width / frameWidth).floor(); // 8
 
-      // SpriteSheets
+      final idleFrameCount = (eIdle.width / frameWidth).floor();
+      final attackFrameCount = (eAttack.width / frameWidth).floor();
+      final hurtFrameCount = (eHurt.width / frameWidth).floor();
+      final deathFrameCount = (eDeath.width / frameWidth).floor();
+
+
       final idleSheet = SpriteSheet(
         image: eIdle,
         srcSize: Vector2(frameWidth, frameHeight),
@@ -366,7 +369,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         srcSize: Vector2(frameWidth, frameHeight),
       );
 
-      // Animations (all use row 0)
+
       enemyAnimations['idle'] = idleSheet.createAnimation(
         row: 0,
         from: 0,
@@ -396,7 +399,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         loop: false,
       );
 
-      // Store animation references for compatibility
+
       _enemyIdleAnim = enemyAnimations['idle']!;
       _enemyAnims = enemyAnimations;
 
@@ -411,10 +414,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
 
       await hud.add(enemyAnim);
 
-      // Create sprite sheets with standard frame sizes
-      // ...existing code for new animation logic...
+
+
     } catch (e) {
-      // Fallback: keep the old Joanna static sprite so app doesn't crash if assets missing
+
       enemy = SpriteComponent(
         sprite: await Sprite.load('Joanna.png'),
         size: actorSize,
@@ -423,7 +426,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         priority: 10,
       )..scale = Vector2(1, 1);
       await hud.add(enemy);
-      // fallback: use hero idle anim for enemyAnim if needed
+
       _enemyIdleAnim = _idleAnim;
       _enemyAnims = {
         'idle': _idleAnim,
@@ -433,10 +436,11 @@ class BattleScene extends Component with HasGameReference<MyGame> {
       };
     }
 
-    // Load quiz & start turn
-    _quizRepo = QuizRepository();
+
+    _quizRepo = QuizRepository(); // Chuẩn bị nguồn câu hỏi.
     _pool = await _quizRepo.loadTopic(_topic);
     final hurtSheet = SpriteSheet(image: hurtImg, srcSize: _kHeroHurtFrameSize);
+    // Bắt đầu lượt đầu tiên ngay sau khi load đủ asset.
     await _nextTurn(attackSheet, deadSheet, hurtSheet);
   }
 
@@ -449,18 +453,20 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     _takingTurn = true;
 
     if (_pool.isEmpty) {
+      // Không còn câu hỏi => trận thắng ngay.
       onEnd(BattleResult.win());
       return;
     }
 
-    final q = _pool.removeAt(0);
+    final q = _pool.removeAt(0); // Lấy câu hỏi tiếp theo.
 
-    // Ensure any previous quiz panels are fully removed from the HUD so
-    // we don't accidentally stack multiple panels with stale content.
-    // (Some platforms may keep visual children alive briefly if not
-    // explicitly removed.)
+
+
+
+
     try {
       for (final c in hud.children.where((c) => c is QuizPanel).toList()) {
+        // Dọn panel cũ để tránh chồng chéo widget.
         c.removeFromParent();
       }
     } catch (_) {}
@@ -468,10 +474,10 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     _panel?.removeFromParent();
     _answering = false;
 
-    // Debug: log which question is being shown so we can trace whether the
-    // question actually changes between turns.
+
+
     try {
-      // question has an 'id' field — use it if available
+
       print('[BattleScene] presenting quiz question: ${q.id}');
     } catch (_) {}
 
@@ -482,11 +488,12 @@ class BattleScene extends Component with HasGameReference<MyGame> {
         _answering = true;
 
         if (isCorrect) {
+          // Trả lời đúng thì tới lượt hero ra tay.
           await _playHeroAttackOnce(attackSheet);
-          enemyHealth.damage(1);
+          enemyHealth.damage(1); // Mỗi câu đúng trừ một tim quái.
           await _hitFx(enemy.position);
 
-          // play enemy hurt animation if available
+
           await _playEnemyHurtOnce();
 
           await Future.delayed(
@@ -497,7 +504,8 @@ class BattleScene extends Component with HasGameReference<MyGame> {
           _panel = null;
 
           if (enemyHealth.isDead) {
-            // play death animation
+
+            // Quái cạn máu thì trả thưởng và kết thúc trận.
             await _playEnemyDeathOnce();
             final xp = _xpRewardFor(enemyType);
             final gold = _goldRewardFor(enemyType);
@@ -508,13 +516,13 @@ class BattleScene extends Component with HasGameReference<MyGame> {
           _takingTurn = false;
           await _nextTurn(attackSheet, deadSheet, hurtSheet);
         } else {
-          heroHealth.damage(1);
+          heroHealth.damage(1); // Sai thì người chơi mất máu.
           await _hitFx(heroRoot.position);
-          // play hurt animation on hero
+
           await _playHeroHurtOnce(hurtSheet);
 
-          // enemy attacks when player is incorrect
-          await _playEnemyAttackOnce();
+
+          await _playEnemyAttackOnce(); // Quái phản đòn để nhắc nhớ lỗi.
 
           if (heroHealth.isDead) {
             await _playHeroDeadOnce(deadSheet);
@@ -543,7 +551,7 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     await hud.add(_panel!);
   }
 
-  // animation helper
+
   Future<void> _playHeroAttackOnce(SpriteSheet sheet) async {
     final anim = sheet.createAnimation(
       row: 0,
@@ -595,35 +603,37 @@ class BattleScene extends Component with HasGameReference<MyGame> {
     final anim = _enemyAnims[type];
     if (anim == null) return;
 
-    // Set the animation - this will automatically cycle through frames
+
     comp.animation = anim;
 
-    // Calculate total duration from all frames
+
     double totalDuration = 0;
     for (final frame in anim.frames) {
       totalDuration += frame.stepTime;
     }
 
-    // Wait for animation to complete
+
     final durMs = (totalDuration * 1000).round();
     await Future.delayed(Duration(milliseconds: durMs));
 
-    // Return to idle animation (except for death)
+
     if (type != 'death' && comp.isMounted) {
+      // Sau khi diễn xong thì trả animation về idle.
       comp.animation = _enemyAnims['idle']!;
     }
   }
 
-  // Enemy animation helpers
-  // Removed unused _playEnemyAnimationOnce helper
 
-  // Use the new modular animation helpers
+
+
+
   Future<void> _playEnemyAttackOnce() async => _playEnemyAnim('attack');
   Future<void> _playEnemyHurtOnce() async => _playEnemyAnim('hurt');
   Future<void> _playEnemyDeathOnce() async => _playEnemyAnim('death');
 
-  // combat fx
+
   Future<void> _hitFx(Vector2 at) async {
+    // Hiệu ứng chớp nhẹ cho cảm giác trúng đòn.
     final fx = CircleComponent(
       radius: 8 * battleScale,
       anchor: Anchor.center,
