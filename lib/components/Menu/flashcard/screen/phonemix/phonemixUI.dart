@@ -127,16 +127,7 @@ class _PhoneMixUIState extends State<PhoneMixUI> {
             height: MediaQuery.of(context).size.height,
             child: ReviewScreen(
               onPressed: () {
-
-
-
-
-
-
-
-
-
-
+                reader.NextTask();
               },
             ),
           ),

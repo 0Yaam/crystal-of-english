@@ -30,7 +30,7 @@ class phoneMixNoti extends ChangeNotifier {
 
   void setCardLength()
   {
-
+    
   }
 
   void NextTask() {

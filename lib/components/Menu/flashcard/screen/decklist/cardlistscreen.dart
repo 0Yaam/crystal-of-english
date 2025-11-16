@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mygame/components/Menu/flashcard/business/Flashcard.dart';
 import 'package:mygame/components/Menu/flashcard/screen/blankfill/blankwordscreen.dart';
+import 'package:mygame/components/Menu/flashcard/screen/echospell/echospell.dart';
 import 'package:mygame/components/Menu/flashcard/screen/flashcard/newwayreview.dart';
 import 'package:mygame/components/Menu/flashcard/screen/mindfield/mindfeild.dart';
 import 'package:mygame/components/Menu/flashcard/screen/phonemix/phonemix.dart';
@@ -51,6 +52,7 @@ class _CardListScreenState extends State<CardListScreen> {
               NavPageBtn(label: "blank word", screenBuilder: ()=>BlankWordScreen(deck_id: widget.deckId!,)),
               NavPageBtn(label: "Mind Field", screenBuilder: ()=>MindFeild(deckID: widget.deckId!,)),
               NavPageBtn(label: "Phoneme Mix", screenBuilder: ()=>PhoneMix(deckID: widget.deckId!,)),
+              NavPageBtn(label: "Echo Spell", screenBuilder: ()=>Echospell(deck_id: widget.deckId!,)),
             ],
           ),
         ],
