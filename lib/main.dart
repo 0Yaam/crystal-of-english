@@ -1,5 +1,6 @@
 ﻿import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flame/experimental.dart';
@@ -162,6 +163,8 @@ class MyGame extends FlameGame
   bool _inBattle = false;
   Vector2? _savedJoystickPos;
   String currentMapFile = 'map.tmx';
+  final Random _rng = Random();
+  int _dungeonFloor = 0;
 
   @override
   late World world;
@@ -383,6 +386,8 @@ class MyGame extends FlameGame
     player.joystick = js;
   }
 
+  bool _isDungeon(String mf) => mf.startsWith('dungeon');
+
   Future<void> _initMapObjects(String mapFile) async {
     final effectiveLevel = PlayerProfile.instance.effectiveLevel();
     int _slotCounter = 0;
@@ -479,7 +484,8 @@ class MyGame extends FlameGame
             'Vào đảo Undead',
             onSelected: () async {
               dialogManager.close();
-              await loadMap('dungeon.tmx', spawn: Vector2(1260, 650));
+              _dungeonFloor = 0;
+              await loadDungeon();
             },
           ),
           DialogueChoice('Tạm biệt', onSelected: dialogManager.close),
@@ -574,60 +580,57 @@ class MyGame extends FlameGame
           enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
         ),
       );
-    } else if (mapFile == 'dungeon.tmx') {
-      await world.add(
-        Enemy(
-          patrolRect: ui.Rect.fromLTWH(970, 465, 80, 60),
-          speed: 30,
-          triggerRadius: 48,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
-        ),
+    } else if (_isDungeon(mapFile)) {
+      await _spawnRandomDungeonEnemies(
+        effectiveLevel: effectiveLevel,
+        slotCounter: () => _slotCounter++,
       );
+    }
+  }
+
+  Future<void> _spawnRandomDungeonEnemies({
+    required int effectiveLevel,
+    required int Function() slotCounter,
+  }) async {
+    final int floor = _dungeonFloor == 0 ? 1 : _dungeonFloor;
+    final mapWidth = map.tileMap.map.width * map.tileMap.destTileSize.x;
+    final mapHeight = map.tileMap.map.height * map.tileMap.destTileSize.y;
+
+    final int base = 5;
+    final int byLevel = (expHud.level / 2).ceil();
+    final int byFloor = (floor / 2).ceil();
+    final int count = (base + byLevel + byFloor).clamp(5, 15);
+
+    for (int i = 0; i < count; i++) {
+      final double w = 80 + _rng.nextInt(40);
+      final double h = 60 + _rng.nextInt(40);
+      final double x = _rng.nextDouble() * (mapWidth - w);
+      final double y = _rng.nextDouble() * (mapHeight - h);
 
       await world.add(
         Enemy(
-          patrolRect: ui.Rect.fromLTWH(1035, 300, 80, 60),
-          speed: 28,
-          triggerRadius: 48,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
-        ),
-      );
-
-      await world.add(
-        Enemy(
-          patrolRect: ui.Rect.fromLTWH(230, 530, 80, 60),
-          speed: 32,
-          triggerRadius: 48,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
-        ),
-      );
-
-      await world.add(
-        Enemy(
-          patrolRect: ui.Rect.fromLTWH(265, 300, 80, 60),
-          speed: 20,
-          triggerRadius: 60,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
-        ),
-      );
-      await world.add(
-        Enemy(
-          patrolRect: ui.Rect.fromLTWH(500, 375, 80, 60),
-          speed: 30,
-          triggerRadius: 48,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
-        ),
-      );
-
-      await world.add(
-        Enemy(
-          patrolRect: ui.Rect.fromLTWH(745, 485, 80, 60),
-          speed: 28,
-          triggerRadius: 48,
-          enemyType: _enemyForSlot(effectiveLevel, _slotCounter++),
+          patrolRect: ui.Rect.fromLTWH(x, y, w, h),
+          speed: 24 + _rng.nextInt(12),
+          triggerRadius: 48 + _rng.nextInt(16),
+          enemyType: _enemyForSlot(effectiveLevel, slotCounter()),
         ),
       );
     }
+  }
+
+  Future<void> loadDungeon({bool nextFloor = false}) async {
+    if (nextFloor || _dungeonFloor == 0) {
+      _dungeonFloor = max(1, _dungeonFloor + 1);
+    }
+    const dungeons = [
+      'dungeon.tmx',
+      'dungeon2.tmx',
+      'dungeon3.tmx',
+      'dungeon4.tmx',
+      'dungeon5.tmx',
+    ];
+    final mapFile = dungeons[_rng.nextInt(dungeons.length)];
+    await loadMap(mapFile, spawn: Vector2(1260, 650));
   }
 
   Future<void> enterBattle({required EnemyType enemyType}) async {
@@ -744,7 +747,7 @@ class MyGame extends FlameGame
     await add(newWorld);
     world = newWorld;
 
-    if (mapFile == 'dungeon.tmx') {
+    if (_isDungeon(mapFile)) {
       map = await ft.TiledComponent.load(
         mapFile,
         Vector2.all(tileSize),
@@ -799,13 +802,16 @@ class MyGame extends FlameGame
     // Use centralized method to ensure joystick is properly attached
     await _ensureJoystickAttached();
 
-    await showAreaTitle(
-      mapFile == 'houseinterior.tmx'
-          ? 'Library'
-          : mapFile == 'dungeon.tmx'
-          ? 'Welcome to Undead Island'
-          : 'Overworld',
-    );
+    if (_isDungeon(mapFile) && _dungeonFloor == 0) {
+      _dungeonFloor = 1;
+    }
+
+    final areaTitle = mapFile == 'houseinterior.tmx'
+        ? 'Library'
+        : _isDungeon(mapFile)
+            ? 'Welcome to Dungeon Floor $_dungeonFloor'
+            : 'Overworld';
+    await showAreaTitle(areaTitle);
 
     if (mapFile == 'houseinterior.tmx') {
       await world.add(
@@ -828,7 +834,7 @@ class MyGame extends FlameGame
           },
         ),
       );
-    } else if (mapFile == 'dungeon.tmx') {
+    } else if (_isDungeon(mapFile)) {
       await world.add(
         Coin(
           position: finalSpawn.clone(),

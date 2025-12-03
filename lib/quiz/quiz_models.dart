@@ -11,6 +11,7 @@ class QuizQuestion {
   final int correctIndex;
   final String? sound;
   final String? image;
+  final int difficulty;
 
   const QuizQuestion({
     required this.id,
@@ -21,6 +22,7 @@ class QuizQuestion {
     required this.correctIndex,
     this.sound,
     this.image,
+    this.difficulty = 1,
   });
 
   factory QuizQuestion.fromMap(Map<String, dynamic> m, String topic) {
@@ -33,6 +35,7 @@ class QuizQuestion {
       correctIndex: m['correctIndex'] as int,
       sound: m['sound'] as String?,
       image: m['image'] as String?,
+      difficulty: (m['difficulty'] as num?)?.toInt() ?? 1,
     );
   }
 }
@@ -40,6 +43,8 @@ class QuizQuestion {
 class QuizRepository {
   Future<List<QuizQuestion>> loadTopic(String topic) async {
     final candidates = <String>[
+      'assets/quiz/$topic/${topic}_text.json', // preferred: text-only with difficulty
+      'assets/quiz/$topic/${topic}_difficulty.json',
       'assets/quiz/$topic/$topic.json',
       'assets/quiz/$topic/animals.json',
     ];

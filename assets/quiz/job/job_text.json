@@ -1,0 +1,101 @@
+{
+  "topic": "job",
+  "questions": [
+    {
+      "id": "j1",
+      "type": "text",
+      "prompt": "An architect is someone who designs ___.",
+      "options": ["buildings", "cars", "clothes", "roads"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "j2",
+      "type": "text",
+      "prompt": "An accountant is responsible for managing ___.",
+      "options": ["financial records", "construction sites", "news articles", "laboratories"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "j3",
+      "type": "text",
+      "prompt": "A cashier usually works at a ___.",
+      "options": ["checkout counter", "farm", "police station", "ship deck"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "j4",
+      "type": "text",
+      "prompt": "A firefighter mainly fights ___.",
+      "options": ["fires", "floods", "wind", "earthquakes"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "j5",
+      "type": "text",
+      "prompt": "A journalist's primary job is to ___.",
+      "options": ["report news", "prescribe medicine", "cook meals", "fix engines"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "j6",
+      "type": "text",
+      "prompt": "A pharmacist usually works with ___.",
+      "options": ["medicines", "legal cases", "bridges", "animals"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "j7",
+      "type": "text",
+      "prompt": "An engineer typically focuses on solving ___.",
+      "options": ["technical problems", "fashion trends", "novel plots", "court disputes"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "j8",
+      "type": "text",
+      "prompt": "A data scientist often works with ___.",
+      "options": ["large datasets", "brick walls", "medical scalpels", "flight towers"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "j9",
+      "type": "text",
+      "prompt": "A UX designer improves the ___.",
+      "options": ["user experience", "fuel mix", "court verdict", "soil quality"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "j10",
+      "type": "text",
+      "prompt": "An anesthesiologist is a medical doctor who specializes in ___.",
+      "options": ["pain management", "dentistry", "nutrition", "vision correction"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "j11",
+      "type": "text",
+      "prompt": "A product manager's core responsibility is to ___.",
+      "options": ["align product vision and delivery", "draw architectural plans", "conduct clinical surgery", "defend clients in court"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "j12",
+      "type": "text",
+      "prompt": "An actuary primarily evaluates ___.",
+      "options": ["risk using statistics", "soil moisture", "culinary flavors", "city traffic"],
+      "correctIndex": 0,
+      "difficulty": 5
+    }
+  ]
+}

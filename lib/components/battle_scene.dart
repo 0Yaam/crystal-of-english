@@ -184,6 +184,21 @@ class BattleScene extends Component with HasGameReference<MyGame> {
   bool _answering = false;
   QuizPanel? _panel;
 
+  List<QuizQuestion> _selectQuestionsForLevel(List<QuizQuestion> all) {
+    final int playerLevel = game.expHud.level.clamp(1, 5);
+    final int minD = (playerLevel - 1).clamp(1, 5);
+    final int maxD = (playerLevel + 1).clamp(1, 5);
+
+    final filtered = all
+        .where((q) => q.difficulty >= minD && q.difficulty <= maxD)
+        .toList();
+    if (filtered.isEmpty) {
+      return all..shuffle(_rng);
+    }
+    filtered.shuffle(_rng);
+    return filtered;
+  }
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
@@ -438,7 +453,8 @@ class BattleScene extends Component with HasGameReference<MyGame> {
 
 
     _quizRepo = QuizRepository(); // Chuẩn bị nguồn câu hỏi.
-    _pool = await _quizRepo.loadTopic(_topic);
+    final allQuestions = await _quizRepo.loadTopic(_topic);
+    _pool = _selectQuestionsForLevel(allQuestions);
     final hurtSheet = SpriteSheet(image: hurtImg, srcSize: _kHeroHurtFrameSize);
     // Bắt đầu lượt đầu tiên ngay sau khi load đủ asset.
     await _nextTurn(attackSheet, deadSheet, hurtSheet);

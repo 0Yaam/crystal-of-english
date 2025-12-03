@@ -1,0 +1,205 @@
+{
+  "topic": "animals",
+  "questions": [
+    {
+      "id": "a1",
+      "type": "text",
+      "prompt": "Which mammal lays eggs?",
+      "options": ["platypus", "kangaroo", "bat", "hedgehog"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "a2",
+      "type": "text",
+      "prompt": "Which animal below can fly?",
+      "options": ["platypus", "kangaroo", "bat", "hedgehog"],
+      "correctIndex": 2,
+      "difficulty": 1
+    },
+    {
+      "id": "a3",
+      "type": "text",
+      "prompt": "A lion is most closely related to a ___.",
+      "options": ["cat", "whale", "lizard", "penguin"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a4",
+      "type": "text",
+      "prompt": "Which animal is famous for changing its color to blend in?",
+      "options": ["chameleon", "shark", "eagle", "fox"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a5",
+      "type": "text",
+      "prompt": "Which animal is known for its black-and-white stripes?",
+      "options": ["zebra", "panda", "skunk", "badger"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a6",
+      "type": "text",
+      "prompt": "What do bats mainly use to navigate in the dark?",
+      "options": ["echolocation", "smell trails", "magnetic fields", "touch"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "a7",
+      "type": "text",
+      "prompt": "Which large animal is native to Australia and moves by hopping?",
+      "options": ["kangaroo", "gazelle", "lemur", "yak"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "a8",
+      "type": "text",
+      "prompt": "The blue whale primarily eats ___.",
+      "options": ["krill", "sharks", "algae", "turtles"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "a9",
+      "type": "text",
+      "prompt": "Which animal is a marsupial?",
+      "options": ["kangaroo", "giraffe", "hippo", "seal"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a10",
+      "type": "text",
+      "prompt": "What is a group of wolves called?",
+      "options": ["pack", "herd", "school", "swarm"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "a11",
+      "type": "text",
+      "prompt": "Which bird is famous for mimicking human speech?",
+      "options": ["parrot", "eagle", "sparrow", "owl"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a12",
+      "type": "text",
+      "prompt": "Which animal is the fastest land runner?",
+      "options": ["cheetah", "lion", "greyhound", "ostrich"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "a13",
+      "type": "text",
+      "prompt": "What kind of eater is a panda?",
+      "options": ["herbivore", "carnivore", "omnivore", "scavenger"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a14",
+      "type": "text",
+      "prompt": "Which animal has the longest migration?",
+      "options": ["arctic tern", "elephant", "penguin", "swordfish"],
+      "correctIndex": 0,
+      "difficulty": 5
+    },
+    {
+      "id": "a15",
+      "type": "text",
+      "prompt": "Which animal can sleep standing up?",
+      "options": ["horse", "pig", "cat", "crocodile"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "a16",
+      "type": "text",
+      "prompt": "Which creature is an invertebrate?",
+      "options": ["octopus", "otter", "lizard", "puffin"],
+      "correctIndex": 0,
+      "difficulty": 3
+    },
+    {
+      "id": "a17",
+      "type": "text",
+      "prompt": "Which animal stores nuts for winter?",
+      "options": ["squirrel", "dolphin", "toucan", "anteater"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "a18",
+      "type": "text",
+      "prompt": "Which of these is a reptile?",
+      "options": ["turtle", "salamander", "frog", "trout"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a19",
+      "type": "text",
+      "prompt": "Which animal has a prehensile tail?",
+      "options": ["monkey", "goat", "rabbit", "penguin"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "a20",
+      "type": "text",
+      "prompt": "Which animal is known for carrying its home on its back?",
+      "options": ["snail", "crab", "shrimp", "seal"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "a21",
+      "type": "text",
+      "prompt": "What do camels primarily store in their humps?",
+      "options": ["fat", "water", "bones", "air"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "a22",
+      "type": "text",
+      "prompt": "Which animal uses a pouch to carry its young?",
+      "options": ["koala", "elephant", "raccoon", "otter"],
+      "correctIndex": 0,
+      "difficulty": 2
+    },
+    {
+      "id": "a23",
+      "type": "text",
+      "prompt": "Which fish is famous for its ability to generate electricity?",
+      "options": ["electric eel", "goldfish", "clownfish", "tuna"],
+      "correctIndex": 0,
+      "difficulty": 4
+    },
+    {
+      "id": "a24",
+      "type": "text",
+      "prompt": "Which animal has the longest neck relative to its body?",
+      "options": ["giraffe", "camel", "alpaca", "donkey"],
+      "correctIndex": 0,
+      "difficulty": 1
+    },
+    {
+      "id": "a25",
+      "type": "text",
+      "prompt": "Which animal is known to use tools in the wild?",
+      "options": ["chimpanzee", "sheep", "penguin", "shark"],
+      "correctIndex": 0,
+      "difficulty": 5
+    }
+  ]
+}
